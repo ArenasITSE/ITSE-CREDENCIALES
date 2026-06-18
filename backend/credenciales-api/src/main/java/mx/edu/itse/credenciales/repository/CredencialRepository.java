@@ -1,17 +1,20 @@
 package mx.edu.itse.credenciales.repository;
 
+import mx.edu.itse.credenciales.dto.EstadoCredencialDashboardDTO;
 import mx.edu.itse.credenciales.entity.Credencial;
 import org.springframework.data.jpa.repository.JpaRepository;
-import mx.edu.itse.credenciales.dto.EstadoCredencialDashboardDTO;
 import org.springframework.data.jpa.repository.Query;
-import java.util.List;
 import org.springframework.data.repository.query.Param;
 
-
+import java.util.List;
 import java.util.Optional;
 
 public interface CredencialRepository
         extends JpaRepository<Credencial, Long> {
+
+    // ==========================================
+    // CONSULTAS BÁSICAS
+    // ==========================================
 
     Optional<Credencial> findByAlumnoId(Long alumnoId);
 
@@ -21,62 +24,96 @@ public interface CredencialRepository
 
     long count();
 
-long countByEstado(String estado);
+    long countByEstado(String estado);
 
-@Query("""
-SELECT new mx.edu.itse.credenciales.dto.EstadoCredencialDashboardDTO(
+    Optional<Credencial> findByAlumnoUsuarioUsername(
+            String username
+    );
 
-c.estado,
+    Credencial findTopByOrderByIdDesc();
+    // ==========================================
+    // DASHBOARD
+    // ==========================================
 
-COUNT(c)
+    @Query("""
 
-)
+        SELECT new mx.edu.itse.credenciales.dto.EstadoCredencialDashboardDTO(
 
-FROM Credencial c
+            c.estado,
 
-GROUP BY c.estado
+            COUNT(c)
 
-""")
-List<EstadoCredencialDashboardDTO> obtenerCredencialesPorEstado();
-List<Credencial> findTop5ByOrderByFechaGeneracionDesc();
-Optional<Credencial> findById(Long id);
+        )
 
-@Query("""
+        FROM Credencial c
 
-SELECT c
+        GROUP BY c.estado
 
-FROM Credencial c
+        ORDER BY c.estado
 
-WHERE
+    """)
+    List<EstadoCredencialDashboardDTO> obtenerCredencialesPorEstado();
 
-LOWER(c.alumno.nombreCompleto)
+    List<Credencial> findTop5ByOrderByFechaGeneracionDesc();
 
-LIKE LOWER(CONCAT('%',:texto,'%'))
+    Credencial findTopByOrderByFechaGeneracionDesc();
 
-OR
+    // ==========================================
+    // PERFIL DEL ALUMNO
+    // ==========================================
 
-LOWER(c.alumno.matricula)
+    @Query("""
 
-LIKE LOWER(CONCAT('%',:texto,'%'))
+        SELECT c
 
-OR
+        FROM Credencial c
 
-LOWER(c.folio)
+        JOIN c.alumno a
 
-LIKE LOWER(CONCAT('%',:texto,'%'))
+        JOIN a.usuario u
 
-OR
+        WHERE u.username = :username
 
-LOWER(c.alumno.carrera.nombre)
+    """)
+    Optional<Credencial> obtenerPorUsername(
+            @Param("username") String username
+    );
 
-LIKE LOWER(CONCAT('%',:texto,'%'))
+    // ==========================================
+    // BUSCADOR
+    // ==========================================
 
-ORDER BY c.alumno.nombreCompleto
+    @Query("""
 
-""")
-List<Credencial> buscar(
-        @Param("texto") String texto
-);
+        SELECT c
 
+        FROM Credencial c
+
+        WHERE
+
+            LOWER(c.alumno.nombreCompleto)
+            LIKE LOWER(CONCAT('%', :texto, '%'))
+
+            OR
+
+            LOWER(c.alumno.matricula)
+            LIKE LOWER(CONCAT('%', :texto, '%'))
+
+            OR
+
+            LOWER(c.folio)
+            LIKE LOWER(CONCAT('%', :texto, '%'))
+
+            OR
+
+            LOWER(c.alumno.carrera.nombre)
+            LIKE LOWER(CONCAT('%', :texto, '%'))
+
+        ORDER BY c.alumno.nombreCompleto
+
+    """)
+    List<Credencial> buscar(
+            @Param("texto") String texto
+    );
 
 }

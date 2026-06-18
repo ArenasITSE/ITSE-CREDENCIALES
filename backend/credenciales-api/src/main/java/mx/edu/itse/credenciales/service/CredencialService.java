@@ -1,275 +1,389 @@
 package mx.edu.itse.credenciales.service;
 
 import lombok.RequiredArgsConstructor;
+import mx.edu.itse.credenciales.dto.BusquedaCredencialDTO;
 import mx.edu.itse.credenciales.dto.VerificacionCredencialDTO;
 import mx.edu.itse.credenciales.entity.Alumno;
 import mx.edu.itse.credenciales.entity.Credencial;
 import mx.edu.itse.credenciales.repository.AlumnoRepository;
 import mx.edu.itse.credenciales.repository.CredencialRepository;
 import org.springframework.stereotype.Service;
-import mx.edu.itse.credenciales.service.HistorialCredencialService;
-import mx.edu.itse.credenciales.dto.BusquedaCredencialDTO;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CredencialService {
 
+    //=========================================
+    // REPOSITORIES
+    //=========================================
+
     private final CredencialRepository credencialRepository;
+
     private final AlumnoRepository alumnoRepository;
+
+    //=========================================
+    // SERVICES
+    //=========================================
+
     private final QrService qrService;
+
     private final HistorialCredencialService historialService;
 
+    private final FolioGenerator folioGenerator;
+
+    //=========================================
+    // OBTENER TODAS
+    //=========================================
+
     public List<Credencial> obtenerTodas() {
+
         return credencialRepository.findAll();
+
     }
 
-    public Credencial generarCredencial(Long alumnoId) throws Exception {
+        //=========================================
+    // GENERAR CREDENCIAL POR ID
+    //=========================================
 
-        Alumno alumno = alumnoRepository.findById(alumnoId)
+    public Credencial generarCredencial(
+            Long alumnoId
+    ) throws Exception {
+
+        Alumno alumno =
+
+                alumnoRepository.findById(
+                        alumnoId
+                )
+
                 .orElseThrow(() ->
-                        new RuntimeException("Alumno no encontrado"));
 
-        if (alumno.getFotografia() == null) {
-            throw new RuntimeException(
-                    "El alumno no tiene fotografía registrada");
-        }
+                        new RuntimeException(
+                                "Alumno no encontrado"
+                        )
 
-        if (credencialRepository.existsByAlumnoId(alumnoId)) {
-            throw new RuntimeException(
-                    "El alumno ya tiene una credencial");
-        }
+                );
 
-        // Generar folio único
-        String folio = "ITSE-" + System.currentTimeMillis();
-
-        // URL que abrirá el teléfono al escanear el QR
-        String urlVerificacion =
-                "http://localhost:8080/verificar/" + folio;
-
-        // Generar imagen QR
-        String qrPath = qrService.generarQR(
-                urlVerificacion,
-                folio
+        return generarCredencial(
+                alumno
         );
 
-        // Guardar credencial
-    Credencial credencial = Credencial.builder()
-        .folio(folio)
-        .codigoQR(urlVerificacion)
-        .codigoBarras(alumno.getMatricula())
-        .qrPath(qrPath)
-        .alumno(alumno)
-        .build();
-
-credencial = credencialRepository.save(credencial);
-
-historialService.registrarEvento(
-        credencial,
-        "Credencial generada",
-        "ADMIN"
-);
-
-return credencial;
     }
+
+    //=========================================
+    // GENERAR CREDENCIAL
+    //=========================================
+
+    public Credencial generarCredencial(
+            Alumno alumno
+    ) throws Exception {
+
+        if (alumno.getFotografia() == null) {
+
+            throw new RuntimeException(
+                    "El alumno no tiene fotografía registrada"
+            );
+
+        }
+
+        if (credencialRepository.existsByAlumnoId(
+                alumno.getId()
+        )) {
+
+            throw new RuntimeException(
+                    "El alumno ya tiene una credencial"
+            );
+
+        }
+
+        String folio =
+
+                folioGenerator.generar();
+
+        String urlVerificacion =
+
+                "http://localhost:8080/verificar/"
+                        + folio;
+
+        String qrPath =
+
+                qrService.generarQR(
+
+                        urlVerificacion,
+
+                        folio
+
+                );
+
+        Credencial credencial =
+
+                Credencial.builder()
+
+                        .folio(
+                                folio
+                        )
+
+                        .codigoQR(
+                                urlVerificacion
+                        )
+
+                        .codigoBarras(
+                                alumno.getMatricula()
+                        )
+
+                        .qrPath(
+                                qrPath
+                        )
+
+                        .estado(
+                                "ACTIVA"
+                        )
+
+                        .alumno(
+                                alumno
+                        )
+
+                        .build();
+
+        credencial =
+
+                credencialRepository.save(
+                        credencial
+                );
+
+        historialService.registrarEvento(
+
+                credencial,
+
+                "Credencial generada",
+
+                "ADMIN"
+
+        );
+
+        return credencial;
+
+    }
+
+        //=========================================
+    // BUSCAR POR ID
+    //=========================================
 
     public Credencial buscarPorId(Long id) {
 
         return credencialRepository.findById(id)
+
                 .orElseThrow(() ->
+
                         new RuntimeException(
-                                "Credencial no encontrada"));
+                                "Credencial no encontrada"
+                        )
+
+                );
+
     }
+
+    //=========================================
+    // BUSCAR POR FOLIO
+    //=========================================
 
     public Credencial buscarPorFolio(String folio) {
 
         return credencialRepository.findByFolio(folio)
+
                 .orElseThrow(() ->
+
                         new RuntimeException(
-                                "Credencial no encontrada"));
+                                "Credencial no encontrada"
+                        )
+
+                );
+
     }
 
-    public VerificacionCredencialDTO verificar(String folio){
+    //=========================================
+    // VERIFICAR CREDENCIAL
+    //=========================================
 
-    Credencial credencial = buscarPorFolio(folio);
+    public VerificacionCredencialDTO verificar(
+            String folio
+    ) {
 
-    return VerificacionCredencialDTO.builder()
+        Credencial credencial =
+                buscarPorFolio(folio);
 
-            .nombre(
-                    credencial.getAlumno().getNombreCompleto()
-            )
+        return VerificacionCredencialDTO.builder()
 
-            .matricula(
-                    credencial.getAlumno().getMatricula()
-            )
+                .nombre(
+                        credencial.getAlumno()
+                                .getNombreCompleto()
+                )
 
-            .carrera(
-                    credencial.getAlumno().getCarrera().getNombre()
-            )
+                .matricula(
+                        credencial.getAlumno()
+                                .getMatricula()
+                )
 
-            .semestre(
-                    credencial.getAlumno().getSemestre()
-            )
+                .carrera(
+                        credencial.getAlumno()
+                                .getCarrera()
+                                .getNombre()
+                )
 
-            .folio(
-                    credencial.getFolio()
-            )
+                .semestre(
+                        credencial.getAlumno()
+                                .getSemestre()
+                )
 
-            .estado(
-                    credencial.getEstado()
-            )
+                .folio(
+                        credencial.getFolio()
+                )
 
-            .fotografia(
-                    credencial.getAlumno()
-                            .getFotografia()
-                            .getRuta()
-            )
+                .estado(
+                        credencial.getEstado()
+                )
 
-            .build();
-}
+                .fotografia(
+                        credencial.getAlumno()
+                                .getFotografia()
+                                .getRuta()
+                )
+
+                .build();
+
+    }
 
 
-// ==========================================
-    // CANCELAR CREDENCIAL
-    // ==========================================
 
-   public Credencial cancelarCredencial(Long id){
+  //=========================================
+// CANCELAR CREDENCIAL
+//=========================================
 
-    Credencial credencial =
-            credencialRepository.findById(id)
-                    .orElseThrow(() ->
-                            new RuntimeException(
-                                    "Credencial no encontrada"
-                            ));
+public Credencial cancelarCredencial(Long id) {
+
+    Credencial credencial = buscarPorId(id);
 
     credencial.setEstado("CANCELADA");
 
-    credencial =
-            credencialRepository.save(
-                    credencial
-            );
+    credencial = credencialRepository.save(credencial);
 
     historialService.registrarEvento(
-
             credencial,
-
             "Credencial cancelada",
-
             "ADMIN"
-
     );
 
     return credencial;
-
 }
 
+//=========================================
+// VALIDAR CREDENCIAL
+//=========================================
 
-public Credencial validarCredencial(Long id){
+public Credencial validarCredencial(Long id) {
 
-    Credencial credencial =
-            credencialRepository.findById(id)
-                    .orElseThrow(() ->
-                            new RuntimeException(
-                                    "Credencial no encontrada"
-                            ));
+    Credencial credencial = buscarPorId(id);
 
     credencial.setEstado("VALIDADA");
 
-    credencial =
-            credencialRepository.save(
-                    credencial
-            );
+    credencial = credencialRepository.save(credencial);
 
     historialService.registrarEvento(
-
             credencial,
-
             "Credencial validada",
-
             "ADMIN"
-
     );
 
     return credencial;
-
 }
 
-    // ==========================================
-    // ACTIVAR CREDENCIAL
-    // ==========================================
+//=========================================
+// ACTIVAR CREDENCIAL
+//=========================================
 
-    public Credencial activarCredencial(Long id) {
+public Credencial activarCredencial(Long id) {
 
-        Credencial credencial = buscarPorId(id);
+    Credencial credencial = buscarPorId(id);
 
-        if ("ACTIVA".equals(credencial.getEstado())) {
-
-            throw new RuntimeException(
-                    "La credencial ya se encuentra activa"
-            );
-
-        }
-
-        credencial.setEstado("ACTIVA");
-
-        return credencialRepository.save(
-                credencial
+    if ("ACTIVA".equals(credencial.getEstado())) {
+        throw new RuntimeException(
+                "La credencial ya se encuentra activa"
         );
+    }
+
+    credencial.setEstado("ACTIVA");
+
+    credencial = credencialRepository.save(credencial);
+
+    historialService.registrarEvento(
+            credencial,
+            "Credencial activada",
+            "ADMIN"
+    );
+
+    return credencial;
+}
+
+    //=========================================
+    // BUSCAR CREDENCIALES
+    //=========================================
+
+    public List<BusquedaCredencialDTO> buscar(
+            String texto
+    ) {
+
+        return credencialRepository
+
+                .buscar(texto)
+
+                .stream()
+
+                .map(c ->
+
+                        BusquedaCredencialDTO.builder()
+
+                                .id(
+                                        c.getId()
+                                )
+
+                                .folio(
+                                        c.getFolio()
+                                )
+
+                                .nombre(
+                                        c.getAlumno()
+                                                .getNombreCompleto()
+                                )
+
+                                .matricula(
+                                        c.getAlumno()
+                                                .getMatricula()
+                                )
+
+                                .carrera(
+                                        c.getAlumno()
+                                                .getCarrera()
+                                                .getNombre()
+                                )
+
+                                .semestre(
+                                        c.getAlumno()
+                                                .getSemestre()
+                                )
+
+                                .estado(
+                                        c.getEstado()
+                                )
+
+                                .build()
+
+                )
+
+                .toList();
 
     }
 
-
-    public List<BusquedaCredencialDTO> buscar(String texto){
-
-    return credencialRepository
-            .buscar(texto)
-
-            .stream()
-
-            .map(c ->
-
-                    BusquedaCredencialDTO.builder()
-
-                            .id(
-                                    c.getId()
-                            )
-
-                            .folio(
-                                    c.getFolio()
-                            )
-
-                            .nombre(
-                                    c.getAlumno()
-                                            .getNombreCompleto()
-                            )
-
-                            .matricula(
-                                    c.getAlumno()
-                                            .getMatricula()
-                            )
-
-                            .carrera(
-                                    c.getAlumno()
-                                            .getCarrera()
-                                            .getNombre()
-                            )
-
-                            .semestre(
-                                    c.getAlumno()
-                                            .getSemestre()
-                            )
-
-                            .estado(
-                                    c.getEstado()
-                            )
-
-                            .build()
-
-            )
-
-            .toList();
-
-}
-
+    
 
 }

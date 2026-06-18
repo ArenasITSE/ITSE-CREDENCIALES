@@ -1,0 +1,342 @@
+<div class="login-container">
+
+    <!-- ================================================= -->
+    <!-- PANEL IZQUIERDO -->
+    <!-- ================================================= -->
+
+    <section class="left-panel">
+
+        <div class="overlay"></div>
+
+        <div class="contenido">
+
+            <!-- ================= LOGOS ================= -->
+
+            <div class="logos">
+
+                <img
+                    src="/assets/logos/tecnm_L.png"
+                    class="logo-tecnm"
+                    alt="TecNM">
+
+                <div class="linea"></div>
+
+                <img
+                    src="/assets/logos/itse_L.png"
+                    class="logo-itse"
+                    alt="ITSE">
+
+            </div>
+
+            <!-- ================= TÍTULO ================= -->
+
+            <div class="hero">
+
+                <h1>
+
+                    PORTAL DE
+                    <br>
+                    CREDENCIALES
+
+                </h1>
+
+                <h2>
+
+                    ESTUDIANTILES
+
+                </h2>
+
+                <p class="descripcion">
+
+                    Accede al sistema para consultar tu credencial digital,
+                    mantener tu información actualizada y aprovechar todos
+                    los servicios institucionales del Instituto Tecnológico
+                    Superior de Escárcega.
+
+                </p>
+
+            </div>
+
+            <!-- ================= TARJETAS ================= -->
+
+            <div class="cards">
+                           <div class="card">
+
+                    <div class="card-icon">
+
+                        <span class="material-icons">
+                            verified_user
+                        </span>
+
+                    </div>
+
+                    <h3>Seguro</h3>
+
+                    <p>
+
+                        Tus datos están protegidos con altos estándares de seguridad.
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <div class="card-icon">
+
+                        <span class="material-icons">
+                            badge
+                        </span>
+
+                    </div>
+
+                    <h3>Personal</h3>
+
+                    <p>
+
+                        Información exclusiva para alumnos y personal autorizado.
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <div class="card-icon">
+
+                        <span class="material-icons">
+                            schedule
+                        </span>
+
+                    </div>
+
+                    <h3>Disponible</h3>
+
+                    <p>
+
+                        Accede a tu credencial desde cualquier lugar y en cualquier momento.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- ================= FOOTER IZQUIERDO ================= -->
+
+            <div class="footer-left">
+
+                <div class="footer-item">
+
+                    <span class="material-icons">
+                        language
+                    </span>
+
+                    <span>
+
+                        www.itse.edu.mx
+
+                    </span>
+
+                </div>
+
+                <div class="footer-item">
+
+                    <span class="material-icons">
+                        facebook
+                    </span>
+
+                    <span>
+
+                        ITSE Escárcega
+
+                    </span>
+
+                </div>
+
+                <div class="footer-item">
+
+                    <span class="material-icons">
+                        mail
+                    </span>
+
+                    <span>
+
+                        contacto@itse.edu.mx
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================================================= -->
+    <!-- PANEL DERECHO -->
+    <!-- ================================================= -->
+
+    <section class="right-panel">
+
+        <div class="login-card">
+
+            <!-- Avatar -->
+
+            <div class="avatar">
+
+                <span class="material-icons">
+                    account_circle
+                </span>
+
+            </div>
+
+            <h1>
+
+                Iniciar sesión
+
+            </h1>
+
+            <p>
+
+                Ingresa tus credenciales para continuar
+
+            </p>
+
+            <form
+                [formGroup]="loginForm"
+                (ngSubmit)="iniciarSesion()">     
+
+                                <!-- ================= USUARIO ================= -->
+
+                <div class="form-group">
+
+                    <label>
+
+                        Número de control
+
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="material-icons">
+
+                            badge
+
+                        </span>
+
+                        <input
+
+                            type="text"
+
+                            placeholder="Ingresa tu número de control"
+
+                            formControlName="username">
+
+                    </div>
+
+                </div>
+
+                <!-- ================= PASSWORD ================= -->
+
+                <div class="form-group">
+
+                    <label>
+
+                        Contraseña
+
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="material-icons">
+
+                            lock
+
+                        </span>
+
+                        <input
+
+                            [type]="mostrarPassword ? 'text' : 'password'"
+
+                            placeholder="Ingresa tu contraseña"
+
+                            formControlName="password">
+
+                        <button
+
+                            type="button"
+
+                            class="eye"
+
+                            (click)="mostrarPassword = !mostrarPassword">
+
+                            <span class="material-icons">
+
+                                {{ mostrarPassword ? 'visibility_off' : 'visibility' }}
+
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- ================= BOTÓN ================= -->
+
+                <button
+
+                    class="btn-login"
+
+                    type="submit"
+
+                    [disabled]="cargando">
+
+                    <span *ngIf="!cargando">
+
+                        INGRESAR
+
+                    </span>
+
+                    <span *ngIf="cargando">
+
+                        Iniciando sesión...
+
+                    </span>
+
+                </button>
+
+            </form>
+
+            <!-- ================= INFORMACIÓN ================= -->
+
+            <div class="login-footer">
+
+                <p>
+
+                    ¿No puedes acceder a tu cuenta?
+
+                </p>
+
+                <p>
+
+                    Comunícate con el departamento de
+
+                    <strong>
+
+                        Servicios Escolares
+
+                    </strong>
+
+                </p>
+
+            </div>
+
+        </div>
+
+        
+    </section>
+
+</div>

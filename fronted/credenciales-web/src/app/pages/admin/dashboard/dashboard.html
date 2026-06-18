@@ -1,0 +1,906 @@
+<div class="dashboard-layout">
+
+    
+    <!-- ========================================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-overlay"></div>
+
+        <div class="sidebar-content">
+
+            <!-- Logo -->
+
+            <div class="logo">
+
+                <img
+                    src="/assets/logos/itse-logo_white.png"
+                    alt="ITSE">
+
+            </div>
+
+            <!-- Menú -->
+
+            <nav class="menu">
+
+                <a
+                    class="menu-item active">
+
+                    <i class="fa-solid fa-house"></i>
+
+                    <span>
+
+                        Dashboard
+
+                    </span>
+
+                </a>
+
+                <a
+                    class="menu-item"
+                    routerLink="/nuevo-alumno">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    <span>
+
+                        Nuevo alumno
+
+                    </span>
+
+                </a>
+
+                <a
+                    class="menu-item">
+
+                    <i class="fa-solid fa-users"></i>
+
+                    <span>
+
+                        Alumnos
+
+                    </span>
+
+                </a>
+
+
+
+            </nav>
+
+        </div>
+
+        <!-- Footer Sidebar -->
+
+        <div class="sidebar-footer">
+
+            <button
+
+                class="logout-btn"
+
+                (click)="cerrarSesion()">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>
+
+                    Cerrar sesión
+
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+    <!-- ========================================= -->
+    <!-- CONTENIDO -->
+    <!-- ========================================= -->
+
+    <main class="dashboard-content">
+
+        <!-- ========================================= -->
+        <!-- HEADER -->
+        <!-- ========================================= -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button class="menu-button">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+                <div>
+
+                    <h1>
+
+                        Bienvenido {{ usuario.nombre }}
+
+                    </h1>
+
+                    <p>
+
+                        Panel administrativo del Sistema Integral de Credenciales Digitales.
+
+                    </p>
+
+                </div>
+
+            </div>
+            
+
+            <div class="topbar-right">
+
+                <button class="notification">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span>
+
+                        0
+
+                    </span>
+
+                </button>
+
+                <div class="profile">
+
+                    <img
+
+                        [src]="usuario.foto || '/assets/images/user.png'"
+
+                        alt="Administrador">
+
+                    <div>
+
+                        <strong>
+
+                            {{ usuario.nombre }}
+
+                        </strong>
+
+                        <small>
+
+                            Administrador
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- ========================================= -->
+        <!-- TARJETAS KPI -->
+        <!-- ========================================= -->
+
+        <section class="stats-grid">
+
+            <!-- Total alumnos -->
+
+            <div class="stat-card primary">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-user-graduate"></i>
+
+                </div>
+
+                <div class="stat-info">
+
+                    <span>
+
+                        Total de alumnos
+
+                    </span>
+
+                    <h2>
+
+                        {{ dashboard.totalAlumnos }}
+
+                    </h2>
+
+                    <small>
+
+                        Registrados en el sistema
+
+                    </small>
+
+                </div>
+
+            </div>
+
+            <!-- Total credenciales -->
+
+            <div class="stat-card success">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-id-card"></i>
+
+                </div>
+
+                <div class="stat-info">
+
+                    <span>
+
+                        Credenciales generadas
+
+                    </span>
+
+                    <h2>
+
+                        {{ dashboard.totalCredenciales }}
+
+                    </h2>
+
+                    <small>
+
+                        Credenciales emitidas
+
+                    </small>
+
+                </div>
+
+            </div>
+
+            <!-- Continúa en la Parte 2 -->
+                         <!-- Credenciales validadas -->
+
+            <div class="stat-card danger">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+                <div class="stat-info">
+
+                    <span>
+
+                        Credenciales validadas
+
+                    </span>
+
+                    <h2>
+
+                        {{ dashboard.credencialesValidadas }}
+
+                    </h2>
+
+                    <small>
+
+                        Documentos verificados
+
+                    </small>
+
+                </div>
+
+            </div>
+
+            <!-- Carreras -->
+
+            <div class="stat-card purple">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-building-columns"></i>
+
+                </div>
+
+                <div class="stat-info">
+
+                    <span>
+
+                        Carreras
+
+                    </span>
+
+                    <h2>
+
+                        {{ dashboard.totalCarreras }}
+
+                    </h2>
+
+                    <small>
+
+                        Oferta educativa
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================= -->
+        <!-- CONTENIDO PRINCIPAL -->
+        <!-- ========================================= -->
+
+        <section class="dashboard-grid">
+
+            <!-- ========================================= -->
+            <!-- GRÁFICAS -->
+            <!-- ========================================= -->
+
+            <div class="charts-container">
+
+                <!-- Alumnos por carrera -->
+
+                <div class="chart-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3>
+
+                                Alumnos por carrera
+
+                            </h3>
+
+                            <span>
+
+                                Distribución de estudiantes
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="chart-body">
+
+                        <canvas
+
+                            baseChart
+
+                            [data]="alumnosChartData"
+
+                            type="doughnut"
+
+                            [options]="doughnutChartOptions">
+
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+                <!-- Credenciales -->
+
+                <div class="chart-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3>
+
+                                Estado de credenciales
+
+                            </h3>
+
+                            <span>
+
+                                Distribución por estado
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="chart-body">
+
+                        <canvas
+
+                            baseChart
+
+                            [data]="credencialesChartData"
+
+                            type="doughnut"
+
+                            [options]="doughnutChartOptions">
+
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ========================================= -->
+            <!-- ÚLTIMOS ALUMNOS -->
+            <!-- ========================================= -->
+
+            <div class="activity-card">
+
+                <div class="card-header">
+
+                    <h3>
+
+                        Últimos alumnos registrados
+
+                    </h3>
+
+                </div>
+
+                <div class="activity-list">
+
+                    <div
+
+                        class="activity-item"
+
+                        *ngFor="let alumno of ultimosAlumnos">
+
+                        <div class="activity-icon">
+
+                            <i class="fa-solid fa-user-graduate"></i>
+
+                        </div>
+
+                        <div class="activity-content">
+
+                            <strong>
+
+                                {{ alumno.nombre }}
+
+                            </strong>
+
+                            <span>
+
+                                {{ alumno.matricula }}
+
+                            </span>
+
+                        </div>
+
+                        <small>
+
+                            {{ alumno.semestre }}° Sem.
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+                        <!-- ========================================= -->
+            <!-- ÚLTIMAS CREDENCIALES -->
+            <!-- ========================================= -->
+
+            <div class="activity-card">
+
+                <div class="card-header">
+
+                    <h3>
+
+                        Últimas credenciales generadas
+
+                    </h3>
+
+                </div>
+
+                <div class="activity-list">
+
+                    <div
+
+                        class="activity-item"
+
+                        *ngFor="let credencial of ultimasCredenciales">
+
+                        <div class="activity-icon">
+
+                            <i class="fa-solid fa-id-card"></i>
+
+                        </div>
+
+                        <div class="activity-content">
+
+                            <strong>
+
+                                {{ credencial.nombre }}
+
+                            </strong>
+
+                            <span>
+
+                                {{ credencial.folio }}
+
+                            </span>
+
+                        </div>
+
+                        <small>
+
+                            {{ credencial.fecha | date:'dd/MM/yyyy' }}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ========================================= -->
+            <!-- ACCIONES RÁPIDAS -->
+            <!-- ========================================= -->
+
+            <div class="quick-actions">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+
+                            Acciones rápidas
+
+                        </h3>
+
+                        <span>
+
+                            Accesos directos del sistema
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="actions-grid">
+
+                    <!-- Registrar alumno -->
+
+                    <button
+
+                        class="action-card primary"
+
+                        routerLink="/nuevo-alumno">
+
+                        <div class="action-icon">
+
+                            <i class="fa-solid fa-user-plus"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>
+
+                                Registrar alumno
+
+                            </h4>
+
+                            <span>
+
+                                Alta de alumno y generación de credencial
+
+                            </span>
+
+                        </div>
+
+                    </button>
+
+                    <!-- Alumnos -->
+
+                    <button
+
+                        class="action-card success"
+
+                        routerLink="/alumnos">
+
+                        <div class="action-icon">
+
+                            <i class="fa-solid fa-users"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>
+
+                                Administrar alumnos
+
+                            </h4>
+
+                            <span>
+
+                                Consultar y editar alumnos
+
+                            </span>
+
+                        </div>
+
+                    </button>
+
+                    <!-- Credenciales -->
+
+                    <button
+
+                        class="action-card warning"
+
+                        routerLink="/credenciales">
+
+                        <div class="action-icon">
+
+                            <i class="fa-solid fa-id-card"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>
+
+                                Credenciales
+
+                            </h4>
+
+                            <span>
+
+                                Gestionar credenciales digitales
+
+                            </span>
+
+                        </div>
+
+                    </button>
+
+                    <!-- Carreras -->
+
+                    <button
+
+                        class="action-card purple"
+
+                        routerLink="/carreras">
+
+                        <div class="action-icon">
+
+                            <i class="fa-solid fa-building-columns"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>
+
+                                Carreras
+
+                            </h4>
+
+                            <span>
+
+                                Administración de carreras
+
+                            </span>
+
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </div>
+                        <!-- ========================================= -->
+            <!-- RESUMEN DEL SISTEMA -->
+            <!-- ========================================= -->
+
+            <div class="summary-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+
+                            Resumen del sistema
+
+                        </h3>
+
+                        <span>
+
+                            Indicadores generales del sistema
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="summary-body">
+
+                    <div class="summary-item">
+
+                        <span>
+
+                            Total de alumnos
+
+                        </span>
+
+                        <strong>
+
+                            {{ dashboard.totalAlumnos }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>
+
+                            Total de carreras
+
+                        </span>
+
+                        <strong>
+
+                            {{ dashboard.totalCarreras }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>
+
+                            Credenciales generadas
+
+                        </span>
+
+                        <strong>
+
+                            {{ dashboard.totalCredenciales }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>
+
+                            Credenciales validadas
+
+                        </span>
+
+                        <strong>
+
+                            {{ dashboard.credencialesValidadas }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>
+
+                            Credenciales canceladas
+
+                        </span>
+
+                        <strong>
+
+                            {{ dashboard.credencialesCanceladas }}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ========================================= -->
+            <!-- INFORMACIÓN GENERAL -->
+            <!-- ========================================= -->
+
+            <div class="summary-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+
+                            Estado del sistema
+
+                        </h3>
+
+                        <span>
+
+                            Información general
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="summary-body">
+
+                    <div class="summary-item">
+
+                        <span>
+
+                            API
+
+                        </span>
+
+                        <strong class="text-success">
+
+                            Conectada
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>
+
+                            Base de datos
+
+                        </span>
+
+                        <strong class="text-success">
+
+                            PostgreSQL
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>
+
+                            Backend
+
+                        </span>
+
+                        <strong>
+
+                            Spring Boot
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>
+
+                            Frontend
+
+                        </span>
+
+                        <strong>
+
+                            Angular 20
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            

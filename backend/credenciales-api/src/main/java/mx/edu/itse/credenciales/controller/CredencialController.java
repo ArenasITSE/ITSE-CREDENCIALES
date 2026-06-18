@@ -74,14 +74,32 @@ public class CredencialController {
     // GENERAR PDF
     // ==========================================
 
-    @GetMapping("/pdf/{id}")
-    public String generarPdf(
-            @PathVariable Long id
-    ) throws Exception {
+ // ==========================================
+// VER PDF EN EL NAVEGADOR
+// ==========================================
+@GetMapping("/pdf/{id}")
+public ResponseEntity<Resource> verPdf(
+        @PathVariable Long id
+) throws Exception {
 
-        return pdfService.generarPdf(id);
+    String rutaPdf = pdfService.generarPdf(id);
 
-    }
+    Path path = Paths.get(rutaPdf);
+
+    Resource resource = new UrlResource(path.toUri());
+
+    return ResponseEntity.ok()
+
+            .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+
+            .header(
+                    HttpHeaders.CONTENT_DISPOSITION,
+                    "inline; filename=\"credencial.pdf\""
+            )
+
+            .body(resource);
+
+}
 
     // ==========================================
     // DESCARGAR PDF

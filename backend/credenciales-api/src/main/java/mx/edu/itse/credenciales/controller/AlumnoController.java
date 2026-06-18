@@ -10,8 +10,10 @@ import mx.edu.itse.credenciales.service.FotografiaService;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import mx.edu.itse.credenciales.dto.AlumnoActualizarDTO;
+import mx.edu.itse.credenciales.dto.RegistrarAlumnoRequest;
+import mx.edu.itse.credenciales.dto.RegistrarAlumnoResponse;
+
+import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -40,6 +42,20 @@ public class AlumnoController {
 
         return alumnoService.registrarAlumno(alumnoDTO);
     }
+
+   @PostMapping(
+        value = "/registrar-completo",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+)
+public RegistrarAlumnoResponse registrarCompleto(
+
+        @ModelAttribute RegistrarAlumnoRequest request
+
+) throws Exception {
+
+    return alumnoService.registrarCompleto(request);
+
+}
 
     @DeleteMapping("/{id}")
     public String eliminar(@PathVariable Long id) {
@@ -90,4 +106,8 @@ public Alumno actualizar(
     );
 
 }
+
+
+
+
 }

@@ -1,16 +1,18 @@
 package mx.edu.itse.credenciales.service;
 
 import lombok.RequiredArgsConstructor;
-
 import mx.edu.itse.credenciales.dto.DashboardDTO;
 import mx.edu.itse.credenciales.dto.UltimaCredencialDTO;
 import mx.edu.itse.credenciales.dto.UltimoAlumnoDTO;
-
+import mx.edu.itse.credenciales.entity.Alumno;
+import mx.edu.itse.credenciales.entity.Credencial;
 import mx.edu.itse.credenciales.repository.AlumnoRepository;
 import mx.edu.itse.credenciales.repository.CarreraRepository;
 import mx.edu.itse.credenciales.repository.CredencialRepository;
-
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -22,35 +24,82 @@ public class DashboardService {
 
     public DashboardDTO obtenerDashboard() {
 
+        // ==========================================
+        // ÚLTIMO ALUMNO
+        // ==========================================
+
+        Alumno ultimoAlumno =
+                alumnoRepository.findTopByOrderByIdDesc();
+
+        // ==========================================
+        // ÚLTIMA CREDENCIAL
+        // ==========================================
+
+        Credencial ultimaCredencial =
+                credencialRepository.findTopByOrderByFechaGeneracionDesc();
+
         return DashboardDTO.builder()
 
-                // ===========================
-                // TARJETAS PRINCIPALES
-                // ===========================
+                // ==========================================
+                // TARJETAS
+                // ==========================================
 
                 .totalAlumnos(
                         alumnoRepository.countByActivoTrue()
+                )
+
+              .credencialesActivas(
+
+        credencialRepository.count()
+
+)
+                .credencialesCanceladas(
+                        credencialRepository.countByEstado("CANCELADA")
                 )
 
                 .totalCarreras(
                         carreraRepository.countByActivoTrue()
                 )
 
-                .totalCredenciales(
-                        credencialRepository.count()
+                // ==========================================
+                // RESUMEN
+                // ==========================================
+
+                .ultimoAlumno(
+
+                        ultimoAlumno != null
+
+                                ? ultimoAlumno.getNombreCompleto()
+
+                                : "--"
+
                 )
 
-                .credencialesValidadas(
-                        credencialRepository.countByEstado("VALIDADA")
+                .ultimaCredencial(
+
+                        ultimaCredencial != null
+
+                                ? ultimaCredencial.getFolio()
+
+                                : "--"
+
                 )
 
-                .credencialesCanceladas(
-                        credencialRepository.countByEstado("CANCELADA")
+                .ultimaActualizacion(
+
+                        LocalDateTime.now()
+
+                                .format(
+                                        DateTimeFormatter.ofPattern(
+                                                "dd/MM/yyyy HH:mm"
+                                        )
+                                )
+
                 )
 
-                // ===========================
+                // ==========================================
                 // GRÁFICAS
-                // ===========================
+                // ==========================================
 
                 .alumnosPorCarrera(
                         alumnoRepository.obtenerAlumnosPorCarrera()
@@ -64,13 +113,14 @@ public class DashboardService {
                         credencialRepository.obtenerCredencialesPorEstado()
                 )
 
-                // ===========================
+                // ==========================================
                 // ÚLTIMAS CREDENCIALES
-                // ===========================
+                // ==========================================
 
                 .ultimasCredenciales(
 
                         credencialRepository
+
                                 .findTop5ByOrderByFechaGeneracionDesc()
 
                                 .stream()
@@ -100,13 +150,14 @@ public class DashboardService {
 
                 )
 
-                // ===========================
+                // ==========================================
                 // ÚLTIMOS ALUMNOS
-                // ===========================
+                // ==========================================
 
                 .ultimosAlumnos(
 
                         alumnoRepository
+
                                 .findTop5ByOrderByIdDesc()
 
                                 .stream()

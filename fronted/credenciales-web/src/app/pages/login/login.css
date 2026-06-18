@@ -1,0 +1,1033 @@
+/* =======================================================
+   RESET
+======================================================= */
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+
+html,
+body{
+
+    width:100%;
+    height:100%;
+    overflow:hidden;
+
+    font-family:
+    "Segoe UI",
+    Tahoma,
+    Geneva,
+    Verdana,
+    sans-serif;
+
+    background:#edf2f7;
+
+}
+
+/* =======================================================
+   CONTENEDOR PRINCIPAL
+======================================================= */
+
+.login-container{
+
+    width:100vw;
+    height:100vh;
+
+    display:grid;
+
+    grid-template-columns:70% 30%;
+
+    overflow:hidden;
+
+}
+
+/* =======================================================
+   PANEL IZQUIERDO
+======================================================= */
+
+.left-panel{
+
+    position:relative;
+
+    width:100%;
+    height:100%;
+
+    background:url("/assets/images/fondo-itse.jpeg");
+
+    background-size:cover;
+
+    background-position:center;
+
+    background-repeat:no-repeat;
+
+}
+/* =======================================================
+   CAPA OSCURA
+======================================================= */
+.overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(0,18,45,.45);
+
+    z-index:1;
+
+}
+
+/* =======================================================
+   CONTENIDO
+======================================================= */
+.contenido{
+
+    position:relative;
+
+    z-index:2;
+
+    width:100%;
+
+    height:100%;
+
+    padding:50px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+}
+
+/* =======================================================
+   LOGOS
+======================================================= */
+
+.logos{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+}
+
+.logo-tecnm{
+
+    height:78px;
+
+    width:auto;
+
+}
+
+.logo-itse{
+
+    height:82px;
+
+    width:auto;
+
+}
+
+.linea{
+
+    width:2px;
+
+    height:65px;
+
+    background:rgba(255,255,255,.45);
+
+}
+
+/* =======================================================
+   HERO
+======================================================= */
+
+.hero{
+
+    margin-top:25px;
+
+    color:white;
+
+}
+/* =======================================================
+   TITULO
+======================================================= */
+
+.hero h1{
+
+    font-size:72px;
+
+    font-weight:800;
+
+    line-height:72px;
+
+    letter-spacing:2px;
+
+    margin-bottom:15px;
+
+    text-shadow:0 4px 15px rgba(0,0,0,.30);
+
+}
+
+.hero h2{
+
+    font-size:24px;
+
+    font-weight:300;
+
+    letter-spacing:12px;
+
+    margin-bottom:35px;
+
+    text-transform:uppercase;
+
+    opacity:.95;
+
+}
+
+.descripcion{
+
+    width:75%;
+
+    font-size:18px;
+
+    line-height:1.8;
+
+    color:rgba(255,255,255,.95);
+
+}
+
+/* =======================================================
+   TARJETAS
+======================================================= */
+
+.cards{
+
+    display:flex;
+
+    gap:25px;
+
+    margin-top:50px;
+
+    margin-bottom:30px;
+
+}
+
+.card{
+
+    flex:1;
+
+    background:rgba(255,255,255,.12);
+
+    backdrop-filter:blur(14px);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    border-radius:22px;
+
+    padding:28px;
+
+    transition:.35s;
+
+    color:white;
+
+}
+
+.card:hover{
+
+    transform:translateY(-8px);
+
+    background:rgba(255,255,255,.18);
+
+    box-shadow:0 20px 35px rgba(0,0,0,.25);
+
+}
+
+.card-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.18);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.card-icon .material-icons{
+
+    font-size:34px;
+
+    color:white;
+
+}
+
+.card h3{
+
+    font-size:20px;
+
+    margin-bottom:12px;
+
+    font-weight:700;
+
+}
+
+.card p{
+
+    font-size:15px;
+
+    line-height:1.7;
+
+    opacity:.95;
+
+}
+
+/* =======================================================
+   FOOTER IZQUIERDO
+======================================================= */
+
+.footer-left{
+
+    display:flex;
+
+    gap:35px;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    color:white;
+
+    font-size:14px;
+
+    margin-top:20px;
+
+}
+
+.footer-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.footer-item .material-icons{
+
+    font-size:22px;
+
+    color:white;
+
+}
+
+.footer-item span:last-child{
+
+    opacity:.9;
+
+}
+
+/* =======================================================
+   PANEL DERECHO
+======================================================= */
+.right-panel{
+
+    width:100%;
+    height:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#f5f7fb;
+
+    padding:40px;
+
+}
+
+/* =======================================================
+   TARJETA LOGIN
+======================================================= */
+
+.login-card{
+
+    width:100%;
+    max-width:500px;
+
+    background:white;
+
+    border-radius:30px;
+
+    padding:55px;
+
+    box-shadow:
+
+        0 15px 45px rgba(0,0,0,.08);
+
+}
+
+.login-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:
+
+        0 30px 70px rgba(0,0,0,.15);
+
+}
+
+/* =======================================================
+   AVATAR
+======================================================= */
+
+.avatar{
+
+    width:90px;
+
+    height:90px;
+
+    margin:auto;
+
+    margin-bottom:25px;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+
+        135deg,
+
+        #0d6efd,
+
+        #0056d6
+
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    box-shadow:
+
+        0 12px 35px rgba(13,110,253,.35);
+
+}
+
+.avatar .material-icons{
+
+    font-size:55px;
+
+    color:white;
+
+}
+
+/* =======================================================
+   TITULO LOGIN
+======================================================= */
+
+.login-card h1{
+
+    text-align:center;
+
+    font-size:34px;
+
+    color:#1d3557;
+
+    margin-bottom:12px;
+
+    font-weight:700;
+
+}
+
+.login-card>p{
+
+    text-align:center;
+
+    color:#6c757d;
+
+    font-size:15px;
+
+    margin-bottom:40px;
+
+}
+
+/* =======================================================
+   FORMULARIO
+======================================================= */
+
+form{
+
+    width:100%;
+
+}
+
+.form-group{
+
+    margin-bottom:25px;
+
+}
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:#2c3e50;
+
+}
+/* =======================================================
+   INPUTS
+======================================================= */
+
+.input-box{
+
+    width:100%;
+
+    height:58px;
+
+    display:flex;
+
+    align-items:center;
+
+    border:1px solid #d9e2ec;
+
+    border-radius:14px;
+
+    background:#fafbfd;
+
+    transition:.30s;
+
+    overflow:hidden;
+
+}
+
+.input-box:hover{
+
+    border-color:#0d6efd;
+
+}
+
+.input-box:focus-within{
+
+    border-color:#0d6efd;
+
+    box-shadow:
+
+        0 0 0 4px rgba(13,110,253,.15);
+
+    background:white;
+
+}
+
+.input-box .material-icons{
+
+    width:60px;
+
+    text-align:center;
+
+    color:#6c757d;
+
+    font-size:23px;
+
+}
+
+/* =======================================================
+   INPUT
+======================================================= */
+
+.input-box input{
+
+    flex:1;
+
+    height:100%;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    font-size:15px;
+
+    color:#2c3e50;
+
+    padding-right:15px;
+
+}
+
+.input-box input::placeholder{
+
+    color:#9aa6b2;
+
+}
+
+/* =======================================================
+   BOTON OJO
+======================================================= */
+
+.eye{
+
+    width:60px;
+
+    height:100%;
+
+    border:none;
+
+    background:transparent;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:.25s;
+
+}
+
+.eye:hover{
+
+    background:#edf4ff;
+
+}
+
+.eye .material-icons{
+
+    font-size:23px;
+
+    color:#6c757d;
+
+}
+
+.eye:hover .material-icons{
+
+    color:#0d6efd;
+
+}
+
+/* =======================================================
+   BOTON LOGIN
+======================================================= */
+
+.btn-login{
+
+    width:100%;
+
+    height:58px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+
+        135deg,
+
+        #0d6efd,
+
+        #0056d6
+
+    );
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+    margin-top:20px;
+
+    box-shadow:
+
+        0 12px 30px rgba(13,110,253,.35);
+
+}
+
+.btn-login:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+        0 18px 40px rgba(13,110,253,.45);
+
+}
+
+.btn-login:active{
+
+    transform:scale(.98);
+
+}
+
+.btn-login:disabled{
+
+    opacity:.65;
+
+    cursor:not-allowed;
+
+}
+
+/* =======================================================
+   FOOTER LOGIN
+======================================================= */
+
+.login-footer{
+
+    margin-top:35px;
+
+    text-align:center;
+
+    font-size:14px;
+
+    color:#6c757d;
+
+}
+
+.login-footer p{
+
+    margin:8px 0;
+
+}
+
+.login-footer strong{
+
+    color:#0d6efd;
+
+    font-weight:700;
+
+}
+
+/* =======================================================
+   COPYRIGHT
+======================================================= */
+
+.copyright{
+
+    margin-top:35px;
+
+    color:#8c98a5;
+
+    font-size:13px;
+
+    text-align:center;
+
+    line-height:1.8;
+
+}
+
+/* =======================================================
+   SCROLLBAR
+======================================================= */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#0d6efd;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#edf2f7;
+
+}
+
+/* =======================================================
+   ANIMACIONES
+======================================================= */
+
+.left-panel{
+
+    animation:fadeLeft .9s ease;
+
+}
+
+.right-panel{
+
+    animation:fadeRight .9s ease;
+
+}
+
+.login-card{
+
+    animation:zoomIn .8s ease;
+
+}
+
+.card{
+
+    animation:fadeUp .9s ease;
+
+}
+
+@keyframes fadeLeft{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(-50px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}
+
+@keyframes fadeRight{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(50px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}
+
+@keyframes zoomIn{
+
+    from{
+
+        opacity:0;
+
+        transform:scale(.92);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* =======================================================
+   RESPONSIVE TABLET
+======================================================= */
+
+@media(max-width:1200px){
+
+    .left-panel{
+
+        width:55%;
+
+    }
+
+    .right-panel{
+
+        width:45%;
+
+    }
+
+    .hero h1{
+
+        font-size:58px;
+
+        line-height:58px;
+
+    }
+
+    .descripcion{
+
+        width:100%;
+
+    }
+
+    .login-card{
+
+        width:420px;
+
+        padding:45px;
+
+    }
+
+}
+
+/* =======================================================
+   RESPONSIVE MOVIL
+======================================================= */
+
+@media(max-width:900px){
+
+    .login-container{
+
+        flex-direction:column;
+
+    }
+
+    .left-panel{
+
+        display:none;
+
+    }
+
+    .right-panel{
+
+        width:100%;
+
+        height:100vh;
+
+        padding:30px;
+
+        background:url("/assets/images/fondo.jpg");
+
+        background-size:cover;
+
+        background-position:center;
+
+    }
+
+    .right-panel::before{
+
+        content:"";
+
+        position:absolute;
+
+        inset:0;
+
+        background:rgba(0,20,55,.60);
+
+    }
+
+    .login-card{
+
+        position:relative;
+
+        z-index:2;
+
+        width:100%;
+
+        max-width:430px;
+
+        margin:auto;
+
+    }
+
+    .copyright{
+
+        position:relative;
+
+        z-index:2;
+
+        color:white;
+
+    }
+
+}
+
+/* =======================================================
+   RESPONSIVE CELULARES PEQUEÑOS
+======================================================= */
+
+@media(max-width:500px){
+
+    .login-card{
+
+        padding:35px 25px;
+
+    }
+
+    .hero h1{
+
+        font-size:44px;
+
+    }
+
+    .btn-login{
+
+        height:54px;
+
+    }
+
+    .avatar{
+
+        width:75px;
+
+        height:75px;
+
+    }
+
+    .avatar .material-icons{
+
+        font-size:46px;
+
+    }
+
+}

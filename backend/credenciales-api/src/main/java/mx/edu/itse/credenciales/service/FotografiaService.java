@@ -10,61 +10,152 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class FotografiaService {
 
+    private static final String CARPETA = "uploads";
+
     private final FotografiaRepository fotografiaRepository;
     private final AlumnoRepository alumnoRepository;
 
+    //=========================================
+    // SUBIR FOTO PARA UN ALUMNO
+    //=========================================
+
     public Fotografia subirFoto(
-        Long alumnoId,
-        MultipartFile archivo) throws IOException {
 
-    System.out.println("========== SUBIENDO FOTO ==========");
-    System.out.println("Alumno ID: " + alumnoId);
-    System.out.println("Archivo: " + archivo.getOriginalFilename());
+            Long alumnoId,
 
-    Alumno alumno = alumnoRepository.findById(alumnoId)
-            .orElseThrow(() ->
-                    new RuntimeException("Alumno no encontrado"));
+            MultipartFile archivo
 
-    System.out.println("Alumno encontrado: " + alumno.getNombreCompleto());
+    ) throws IOException {
 
-    String nombreArchivo =
-            System.currentTimeMillis() + "_" +
-            archivo.getOriginalFilename();
+        Alumno alumno =
+                alumnoRepository.findById(alumnoId)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Alumno no encontrado"
+                                ));
 
-    Path ruta = Paths.get("uploads");
+        Fotografia fotografia =
+                guardarFotografia(archivo);
 
-    if (!Files.exists(ruta)) {
-        Files.createDirectories(ruta);
+        alumno.setFotografia(
+                fotografia
+        );
+
+        alumnoRepository.save(
+                alumno
+        );
+
+        return fotografia;
+
     }
 
-    Files.copy(
-            archivo.getInputStream(),
-            ruta.resolve(nombreArchivo),
-            StandardCopyOption.REPLACE_EXISTING
-    );
+    //=========================================
+    // GUARDAR FOTO
+    //=========================================
 
-    System.out.println("Archivo copiado.");
+    public Fotografia guardarFotografia(
 
-    Fotografia fotografia = Fotografia.builder()
-            .nombreArchivo(nombreArchivo)
-            .ruta("uploads/" + nombreArchivo)
-            .build();
+            MultipartFile archivo
 
-    fotografia = fotografiaRepository.save(fotografia);
+    ) throws IOException {
 
-    System.out.println("Fotografía guardada en BD. ID: " + fotografia.getId());
+        if (archivo == null || archivo.isEmpty()) {
 
-    alumno.setFotografia(fotografia);
+            throw new RuntimeException(
+                    "Debe seleccionar una fotografía."
+            );
 
-    alumnoRepository.save(alumno);
+        }
 
-    System.out.println("Alumno actualizado.");
+        Path carpeta =
+                Paths.get(CARPETA);
 
-    return fotografia;
-}
+        if (!Files.exists(carpeta)) {
+
+            Files.createDirectories(carpeta);
+
+        }
+
+        String extension = obtenerExtension(
+                archivo.getOriginalFilename()
+        );
+
+        String nombreArchivo =
+
+                UUID.randomUUID()
+
+                        + "."
+
+                        + extension;
+
+        Path destino =
+
+                carpeta.resolve(
+                        nombreArchivo
+                );
+
+        Files.copy(
+
+                archivo.getInputStream(),
+
+                destino,
+
+                StandardCopyOption.REPLACE_EXISTING
+
+        );
+
+        Fotografia fotografia =
+                Fotografia.builder()
+
+                        .nombreArchivo(
+                                nombreArchivo
+                        )
+
+                        .ruta(
+                                CARPETA + "/" + nombreArchivo
+                        )
+
+                        .build();
+
+        return fotografiaRepository.save(
+                fotografia
+        );
+
+    }
+
+    //=========================================
+    // EXTENSIÓN
+    //=========================================
+
+    private String obtenerExtension(
+            String nombre
+    ) {
+
+        if (nombre == null) {
+
+            return "jpg";
+
+        }
+
+        int punto =
+                nombre.lastIndexOf(".");
+
+        if (punto == -1) {
+
+            return "jpg";
+
+        }
+
+        return nombre.substring(
+                punto + 1
+        );
+
+    }
+
 }

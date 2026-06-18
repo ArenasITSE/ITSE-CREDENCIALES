@@ -1,0 +1,724 @@
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<div class="dashboard">
+
+    <!-- ========================================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="logo">
+
+                <img
+                    src="/assets/logos/itse-logo_white.png"
+                    alt="ITSE">
+
+            </div>
+
+            <nav class="menu">
+
+                <a
+                    class="menu-item active">
+
+                    <i class="fa-regular fa-id-card"></i>
+
+                    <span>
+
+                        Mi credencial
+
+                    </span>
+
+                </a>
+
+              
+
+            </nav>
+
+        </div>
+
+        
+
+        <!-- Logout -->
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="logout-btn"
+                (click)="cerrarSesion()">
+
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+
+                <span>
+
+                    Cerrar sesión
+
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+    <!-- ========================================= -->
+    <!-- CONTENIDO -->
+    <!-- ========================================= -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+
+                    Mi credencial estudiantil
+
+                </h1>
+
+                <p>
+
+                    Consulta, visualiza y descarga tu credencial institucional.
+
+                </p>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <button class="notification">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span></span>
+
+                </button>
+
+                <div class="user">
+
+                    <div class="avatar">
+
+                        {{ iniciales }}
+
+                    </div>
+
+                    <div class="user-info">
+
+                        <strong>
+
+                            {{ nombreCorto }}
+
+                        </strong>
+
+                        <small>
+
+                            {{ alumno.matricula }}
+
+                        </small>
+
+                    </div>
+
+                    <i class="fa-solid fa-chevron-down"></i>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- ========================================= -->
+        <!-- TARJETA PRINCIPAL -->
+        <!-- ========================================= -->
+
+        <section class="credencial-card">
+
+            <div class="card-header">
+
+                <div class="title">
+
+                    <div class="icon-circle">
+
+                        <i class="fa-regular fa-id-card"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+
+                            Credencial Digital
+
+                        </h2>
+
+                        <span>
+
+                            Vista previa de tu credencial institucional
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+
+                    class="download-btn"
+
+                    (click)="descargarCredencial()"
+
+                    [disabled]="!tieneCredencial">
+
+                    <i class="fa-solid fa-download"></i>
+
+                    Descargar PDF
+
+                </button>
+
+            </div>
+
+            <div class="credencial-body">
+
+                                <!-- ========================================= -->
+                <!-- CREDENCIAL DISPONIBLE -->
+                <!-- ========================================= -->
+
+                <div
+                    class="credencial-content"
+                    *ngIf="tieneCredencial">
+
+                    <!-- LADO IZQUIERDO -->
+
+                    <div class="credencial-left">
+
+                        <div class="success-circle">
+
+                            <div class="success-inner">
+
+                                <i class="fa-solid fa-check"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div class="particles">
+
+                            <span class="dot dot1"></span>
+                            <span class="dot dot2"></span>
+                            <span class="dot dot3"></span>
+                            <span class="dot dot4"></span>
+                            <span class="dot dot5"></span>
+                            <span class="dot dot6"></span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- LADO DERECHO -->
+
+                    <div class="credencial-right">
+
+                        <h2>
+
+                            Credencial disponible
+
+                        </h2>
+
+                        <p>
+
+                            Tu credencial institucional fue generada correctamente y
+                            se encuentra lista para utilizarse.
+
+                        </p>
+
+                        <div class="credencial-info">
+
+                            <!-- Folio -->
+
+                            <div class="info-box">
+
+                                <div class="box-icon">
+
+                                    <i class="fa-regular fa-id-card"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <small>
+
+                                        FOLIO
+
+                                    </small>
+
+                                    <strong>
+
+                                        {{ alumno.folio }}
+
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Estado -->
+
+                            <div class="info-box">
+
+                                <div class="box-icon success">
+
+                                    <i class="fa-solid fa-shield"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <small>
+
+                                        ESTADO
+
+                                    </small>
+
+                                    <span
+                                        class="status-badge"
+                                        [ngClass]="{
+
+                                            'active': alumno.estado=='ACTIVA',
+
+                                            'cancel': alumno.estado=='CANCELADA',
+
+                                            'validate': alumno.estado=='VALIDADA'
+
+                                        }">
+
+                                        {{ alumno.estado }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BOTÓN -->
+
+                        <button
+
+                            class="preview-btn"
+
+                            (click)="abrirCredencial()">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                            Abrir credencial
+
+                        </button>
+
+                        <div class="legal">
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Documento oficial válido para uso institucional.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ========================================= -->
+                <!-- SIN CREDENCIAL -->
+                <!-- ========================================= -->
+
+                <div
+                    class="empty-card"
+                    *ngIf="!tieneCredencial">
+
+                    <div class="empty-icon">
+
+                        <i class="fa-regular fa-id-card"></i>
+
+                    </div>
+
+                    <h2>
+
+                        No tienes una credencial generada
+
+                    </h2>
+
+                    <p>
+
+                        Contacta con el Departamento de Servicios Escolares para solicitar la generación de tu credencial institucional.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================= -->
+        <!-- GRID INFERIOR -->
+        <!-- ========================================= -->
+
+        <section class="cards-grid">
+
+                        <!-- ========================================= -->
+            <!-- INFORMACIÓN DEL ALUMNO -->
+            <!-- ========================================= -->
+
+            <div class="info-card">
+
+                <div class="card-title">
+
+                    <div class="title-icon">
+
+                        <i class="fa-regular fa-user"></i>
+
+                    </div>
+
+                    <h3>
+
+                        Información del alumno
+
+                    </h3>
+
+                </div>
+
+                <div class="student-info">
+
+                    <!-- Nombre -->
+
+                    <div class="info-row">
+
+                        <div class="row-icon">
+
+                            <i class="fa-regular fa-user"></i>
+
+                        </div>
+
+                        <div class="row-label">
+
+                            Nombre completo
+
+                        </div>
+
+                        <div class="row-value">
+
+                            {{ alumno.nombreCompleto }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Matrícula -->
+
+                    <div class="info-row">
+
+                        <div class="row-icon">
+
+                            <i class="fa-regular fa-id-card"></i>
+
+                        </div>
+
+                        <div class="row-label">
+
+                            Matrícula
+
+                        </div>
+
+                        <div class="row-value">
+
+                            {{ alumno.matricula }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Carrera -->
+
+                    <div class="info-row">
+
+                        <div class="row-icon">
+
+                            <i class="fa-solid fa-graduation-cap"></i>
+
+                        </div>
+
+                        <div class="row-label">
+
+                            Carrera
+
+                        </div>
+
+                        <div class="row-value">
+
+                            {{ alumno.carrera }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Semestre -->
+
+                    <div class="info-row">
+
+                        <div class="row-icon">
+
+                            <i class="fa-regular fa-calendar"></i>
+
+                        </div>
+
+                        <div class="row-label">
+
+                            Semestre
+
+                        </div>
+
+                        <div class="row-value">
+
+                            {{ alumno.semestre }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Correo -->
+
+                    <div class="info-row">
+
+                        <div class="row-icon">
+
+                            <i class="fa-regular fa-envelope"></i>
+
+                        </div>
+
+                        <div class="row-label">
+
+                            Correo institucional
+
+                        </div>
+
+                        <div class="row-value">
+
+                            {{ alumno.matricula }}@itsescarcega.edu.mx
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                
+            </div>
+                        <!-- ========================================= -->
+            <!-- ESTADO DE LA CREDENCIAL -->
+            <!-- ========================================= -->
+
+            <div class="info-card">
+
+                <div class="card-title">
+
+                    <div class="title-icon success">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                    </div>
+
+                    <h3>
+
+                        Estado de la credencial
+
+                    </h3>
+
+                </div>
+
+                <div class="timeline">
+
+                    <!-- Estado -->
+
+                    <div class="timeline-item">
+
+                        <div
+                            class="timeline-dot"
+
+                            [ngClass]="{
+
+                                'green': alumno.estado=='ACTIVA',
+
+                                'red': alumno.estado=='CANCELADA',
+
+                                'blue': alumno.estado=='VALIDADA'
+
+                            }">
+
+                        </div>
+
+                        <div class="timeline-content">
+
+                            <small>
+
+                                Estado actual
+
+                            </small>
+
+                            <strong>
+
+                                {{ alumno.estado || 'SIN CREDENCIAL' }}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Folio -->
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot blue"></div>
+
+                        <div class="timeline-content">
+
+                            <small>
+
+                                Folio institucional
+
+                            </small>
+
+                            <strong>
+
+                                {{ alumno.folio || '--' }}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Fecha -->
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot orange"></div>
+
+                        <div class="timeline-content">
+
+                            <small>
+
+                                Fecha de generación
+
+                            </small>
+
+                            <strong>
+
+                                {{ alumno.fechaGeneracion | date:'dd/MM/yyyy HH:mm' }}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Documento -->
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot green"></div>
+
+                        <div class="timeline-content">
+
+                            <small>
+
+                                Documento
+
+                            </small>
+
+                            <strong>
+
+                                Credencial Digital ITSE
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="status-box">
+
+                    <div class="status-icon">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+
+                            Credencial institucional
+
+                        </h4>
+
+                        <p>
+
+                            Este documento puede utilizarse para identificación dentro del Instituto Tecnológico Superior de Escárcega y para la validación mediante código QR.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+                <!-- ========================================= -->
+        <!-- FOOTER -->
+        <!-- ========================================= -->
+
+        <footer class="page-footer">
+
+            <div class="footer-left">
+
+                <i class="fa-regular fa-copyright"></i>
+
+                <span>
+
+                    2026 Instituto Tecnológico Superior de Escárcega
+
+                </span>
+
+            </div>
+
+            <div class="footer-right">
+
+                <span>
+
+                    Sistema Integral de Credenciales Digitales
+
+                </span>
+
+                <span class="version">
+
+                    Versión 1.0
+
+                </span>
+
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+

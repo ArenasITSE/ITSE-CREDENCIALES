@@ -14,70 +14,113 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-        private final JwtFilter jwtFilter;
+    private final JwtFilter jwtFilter;
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(
-                        HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http) throws Exception {
 
-                http
-                                .csrf(csrf -> csrf.disable())
-                                .cors(Customizer.withDefaults())
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
 
-                                .authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
 
-                                                // Públicas
-                                                .requestMatchers(
-                                                                "/api/auth/**",
-                                                                "/api/usuarios/**",
-                                                                "/verificar/**",
-                                                                "/api/credenciales/verificar/**",
-                                                                "/uploads/**")
-                                                .permitAll()
+                        // ==========================================
+                        // RUTAS PÚBLICAS
+                        // ==========================================
 
-                                                // Perfil propio
-                                                .requestMatchers(
-                                                                "/api/perfil/**")
-                                                .hasAnyRole(
-                                                                "ALUMNO",
-                                                                "ADMINISTRADOR")
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/usuarios/**",
+                                "/verificar/**",
+                                "/api/credenciales/verificar/**",
+                                "/uploads/**"
+                        ).permitAll()
 
-                                                // Solo administradores
-                                                .requestMatchers(
-                                                                "/api/alumnos/**")
-                                                .hasRole(
-                                                                "ADMINISTRADOR")
+                        // ==========================================
+                        // PERFIL
+                        // ==========================================
 
-                                                .requestMatchers(
-                                                                "/api/carreras/**")
-                                                .hasRole(
-                                                                "ADMINISTRADOR")
+                        .requestMatchers(
+                                "/api/perfil/**"
+                        ).hasAnyRole(
+                                "ALUMNO",
+                                "ADMINISTRADOR"
+                        )
 
-                                                .requestMatchers(
-                                                                "/api/dashboard/**")
-                                                .hasRole("ADMINISTRADOR")
+                        // ==========================================
+                        // PORTAL DEL ALUMNO
+                        // ==========================================
 
-                                                // Administrador y Control Escolar
-                                                .requestMatchers(
-                                                                "/api/credenciales/**")
-                                                .hasAnyRole(
-                                                                "ADMINISTRADOR",
-                                                                "CONTROL_ESCOLAR")
+                        .requestMatchers(
+                                "/api/alumno/**"
+                        ).hasRole("ALUMNO")
 
-                                                .anyRequest()
-                                                .authenticated())
+                        // ==========================================
+                        // PDF DE CREDENCIALES
+                        // (Alumno también puede descargar)
+                        // ==========================================
 
-                                .addFilterBefore(
-                                                jwtFilter,
-                                                UsernamePasswordAuthenticationFilter.class);
+                        .requestMatchers(
+                                "/api/credenciales/pdf/**"
+                        ).hasAnyRole(
+                                "ALUMNO",
+                                "ADMINISTRADOR",
+                                "CONTROL_ESCOLAR"
+                        )
 
-                return http.build();
-        }
+                        // ==========================================
+                        // ADMINISTRACIÓN DE ALUMNOS
+                        // ==========================================
 
-        @Bean
-        public PasswordEncoder passwordEncoder() {
+                        .requestMatchers(
+                                "/api/alumnos/**"
+                        ).hasRole("ADMINISTRADOR")
 
-                return new BCryptPasswordEncoder();
+                        .requestMatchers(
+                                "/api/carreras/**"
+                        ).hasRole("ADMINISTRADOR")
 
-        }
+                        .requestMatchers(
+                                "/api/dashboard/**"
+                        ).hasRole("ADMINISTRADOR")
+
+                        // ==========================================
+                        // CREDENCIALES
+                        // SOLO ADMINISTRADORES
+                        // ==========================================
+
+                        .requestMatchers(
+                                "/api/credenciales/**"
+                        ).hasAnyRole(
+                                "ADMINISTRADOR",
+                                "CONTROL_ESCOLAR"
+                        )
+
+                        // ==========================================
+                        // CUALQUIER OTRA RUTA
+                        // ==========================================
+
+                        .anyRequest()
+                        .authenticated()
+
+                )
+
+                .addFilterBefore(
+                        jwtFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                );
+
+        return http.build();
+
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+
+        return new BCryptPasswordEncoder();
+
+    }
+
 }

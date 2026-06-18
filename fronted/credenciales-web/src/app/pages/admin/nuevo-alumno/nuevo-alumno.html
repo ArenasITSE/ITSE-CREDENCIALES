@@ -1,0 +1,408 @@
+<div class="nuevo-alumno-page">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Nuevo Alumno</h1>
+
+            <p>
+                Registra un alumno y genera automáticamente
+                su credencial institucional.
+            </p>
+
+        </div>
+
+        <button
+            class="btn-back"
+            routerLink="/dashboard">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Regresar
+
+        </button>
+
+    </div>
+
+    <form
+        class="student-form"
+        (ngSubmit)="guardarAlumno()">
+
+        <div class="form-grid">
+
+            <!--========================-->
+
+            <!-- INFORMACIÓN -->
+
+            <!--========================-->
+
+            <section class="form-card">
+
+                <div class="card-title">
+
+                    <div class="title-icon blue">
+
+                        <i class="fa-solid fa-user-graduate"></i>
+
+                    </div>
+
+                    <h2>
+
+                        Información del alumno
+
+                    </h2>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Usuario
+
+                    </label>
+
+                    <input
+
+                        type="text"
+
+                        name="usuario"
+
+                        [(ngModel)]="alumno.usuario"
+
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Nombre completo
+
+                    </label>
+
+                    <input
+
+                        type="text"
+
+                        name="nombreCompleto"
+
+                        [(ngModel)]="alumno.nombreCompleto"
+
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Matrícula
+
+                    </label>
+
+                    <input
+
+                        type="text"
+
+                        name="matricula"
+
+                        [(ngModel)]="alumno.matricula"
+
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Carrera
+
+                    </label>
+
+                    <select
+
+                        name="carreraId"
+
+                        [(ngModel)]="alumno.carreraId">
+
+                        <option [ngValue]="null">
+
+                            Seleccione...
+
+                        </option>
+
+                        <option
+
+                            *ngFor="let carrera of carreras"
+
+                            [ngValue]="carrera.id">
+
+                            {{ carrera.nombre }}
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Semestre
+
+                    </label>
+
+                    <select
+
+                        name="semestre"
+
+                        [(ngModel)]="alumno.semestre">
+
+                        <option
+
+                            *ngFor="let s of semestres"
+
+                            [ngValue]="s">
+
+                            {{ s }}
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </section>
+
+            <!--========================-->
+
+            <!-- FOTO -->
+
+            <!--========================-->
+
+            <section class="form-card">
+
+                <div class="card-title">
+
+                    <div class="title-icon green">
+
+                        <i class="fa-solid fa-camera"></i>
+
+                    </div>
+
+                    <h2>
+
+                        Fotografía
+
+                    </h2>
+
+                </div>
+
+                <div class="photo-card">
+
+                    <div class="photo-preview">
+
+                        <img
+
+                            *ngIf="fotoPreview"
+
+                            [src]="fotoPreview">
+
+                        <div
+
+                            class="photo-placeholder"
+
+                            *ngIf="!fotoPreview">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div class="photo-upload">
+
+                        <input
+
+                            #foto
+
+                            hidden
+
+                            type="file"
+
+                            accept="image/*"
+
+                            (change)="seleccionarFoto($event)">
+
+                        <label
+
+                            (click)="foto.click()">
+
+                            <i class="fa-solid fa-image"></i>
+
+                            Seleccionar fotografía
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!--========================-->
+
+        <!-- RESUMEN -->
+
+        <!--========================-->
+
+        <section class="summary-card">
+
+            <div class="card-title">
+
+                <div class="title-icon orange">
+
+                    <i class="fa-solid fa-file-circle-check"></i>
+
+                </div>
+
+                <h2>
+
+                    Resumen
+
+                </h2>
+
+            </div>
+
+            <div class="summary-list">
+
+                <div class="summary-item">
+
+                    <span>
+
+                        Nombre
+
+                    </span>
+
+                    <strong>
+
+                        {{ alumno.nombreCompleto || '-' }}
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-item">
+
+                    <span>
+
+                        Matrícula
+
+                    </span>
+
+                    <strong>
+
+                        {{ alumno.matricula || '-' }}
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-item">
+
+                    <span>
+
+                        Carrera
+
+                    </span>
+
+                    <strong>
+
+                        {{ obtenerNombreCarrera() }}
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-item">
+
+                    <span>
+
+                        Semestre
+
+                    </span>
+
+                    <strong>
+
+                        {{ alumno.semestre }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!--========================-->
+
+        <!-- BOTONES -->
+
+        <!--========================-->
+
+        <section class="actions-card">
+
+            <button
+
+                class="btn btn-secondary"
+
+                type="button"
+
+                (click)="limpiarFormulario()">
+
+                <i class="fa-solid fa-eraser"></i>
+
+                Limpiar
+
+            </button>
+
+            <button
+
+                class="btn btn-success"
+
+                [disabled]="cargando"
+
+                type="submit">
+
+                <i
+
+                    *ngIf="!cargando"
+
+                    class="fa-solid fa-floppy-disk">
+
+                </i>
+
+                <i
+
+                    *ngIf="cargando"
+
+                    class="fa-solid fa-spinner fa-spin">
+
+                </i>
+
+                {{ cargando ? 'Guardando...' : 'Guardar Alumno' }}
+
+            </button>
+
+        </section>
+
+    </form>
+
+</div>
