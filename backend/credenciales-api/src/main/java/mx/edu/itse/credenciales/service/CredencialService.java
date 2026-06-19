@@ -8,6 +8,10 @@ import mx.edu.itse.credenciales.entity.Credencial;
 import mx.edu.itse.credenciales.repository.AlumnoRepository;
 import mx.edu.itse.credenciales.repository.CredencialRepository;
 import org.springframework.stereotype.Service;
+import mx.edu.itse.credenciales.repository.HistorialCredencialRepository;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.List;
 
@@ -22,6 +26,7 @@ public class CredencialService {
     private final CredencialRepository credencialRepository;
 
     private final AlumnoRepository alumnoRepository;
+    private final HistorialCredencialRepository historialRepository;
 
     //=========================================
     // SERVICES
@@ -385,5 +390,54 @@ public Credencial activarCredencial(Long id) {
     }
 
     
+    //=========================================
+// ELIMINAR CREDENCIAL
+//=========================================
+
+public void eliminarCredencial(Long id) {
+
+    Credencial credencial = buscarPorId(id);
+
+    historialRepository.deleteByCredencialId(id);
+
+    if (credencial.getQrPath() != null) {
+
+        try {
+
+            Files.deleteIfExists(
+
+                    Paths.get(
+                            credencial.getQrPath()
+                    )
+
+            );
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+    credencialRepository.delete(credencial);
+
+}
+
+//=========================================
+// REGENERAR CREDENCIAL
+//=========================================
+
+public Credencial regenerarCredencial(Long id) throws Exception {
+
+    Credencial anterior = buscarPorId(id);
+
+    Alumno alumno = anterior.getAlumno();
+
+    eliminarCredencial(id);
+
+    return generarCredencial(alumno);
+
+}
 
 }

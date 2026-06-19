@@ -1,0 +1,572 @@
+<div class="alumnos-page">
+
+    <!-- ===================================== -->
+    <!-- HEADER -->
+    <!-- ===================================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+
+                Gestión de Alumnos
+
+            </h1>
+
+            <p>
+
+                Administra alumnos, credenciales institucionales y usuarios del sistema.
+
+            </p>
+
+        </div>
+
+        <button class="btn btn-primary" (click)="nuevoAlumno()">
+
+            <i class="fa-solid fa-user-plus"></i>
+
+            Nuevo Alumno
+
+        </button>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- FILTROS -->
+    <!-- ===================================== -->
+
+    <div class="toolbar">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input type="text" placeholder="Buscar por nombre, matrícula o carrera..." [(ngModel)]="textoBusqueda"
+                (input)="filtrar()">
+
+        </div>
+
+        <select [(ngModel)]="filtroCarrera" (change)="filtrar()">
+
+            <option value="">
+
+                Todas las carreras
+
+            </option>
+
+            @for(carrera of carreras; track carrera.id){
+
+            <option [value]="carrera.nombre">
+
+                {{ carrera.nombre }}
+
+            </option>
+
+            }
+
+        </select>
+
+        <select [(ngModel)]="filtroSemestre" (change)="filtrar()">
+
+            <option value="">
+
+                Todos los semestres
+
+            </option>
+
+            @for(semestre of semestres; track semestre){
+
+            <option [value]="semestre">
+
+                {{ semestre }}°
+
+            </option>
+
+            }
+
+        </select>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- TARJETA -->
+    <!-- ===================================== -->
+
+    <div class="table-card">
+
+        <div class="table-header">
+
+            <div>
+
+                <h2>
+
+                    Alumnos registrados
+
+                </h2>
+
+                <small>
+
+                    Total: {{ alumnosFiltrados.length }}
+
+                </small>
+
+            </div>
+
+        </div>
+        <!-- ===================================== -->
+        <!-- TABLA -->
+        <!-- ===================================== -->
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th style="width:90px">
+
+                            Foto
+
+                        </th>
+
+                        <th>
+
+                            Matrícula
+
+                        </th>
+
+                        <th>
+
+                            Nombre
+
+                        </th>
+
+                        <th>
+
+                            Carrera
+
+                        </th>
+
+                        <th>
+
+                            Semestre
+
+                        </th>
+
+
+
+                        <th style="width:80px">
+
+                            Acciones
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if(cargando){
+
+                    <tr>
+
+                        <td colspan="7">
+
+                            <div class="loading">
+
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                                Cargando alumnos...
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    }
+
+                    @else{
+
+                    @for(alumno of alumnosPagina; track alumno.id){
+
+                    <tr>
+
+                        <!-- FOTO -->
+
+                        <td>
+
+                            @if(alumno.fotografia){
+
+                            <img class="avatar" [src]="obtenerFoto(alumno)" alt="Foto" loading="lazy"
+                                (error)="alumno.fotografia=null">
+
+                            }
+
+                            @else{
+
+                            <div class="avatar initials">
+
+                                {{ alumno.nombreCompleto.charAt(0) }}
+
+                            </div>
+
+                            }
+
+                        </td>
+
+                        <!-- MATRÍCULA -->
+
+                        <td>
+
+                            <strong>
+
+                                {{ alumno.matricula }}
+
+                            </strong>
+
+                        </td>
+
+                        <!-- NOMBRE -->
+
+                        <td>
+
+                            {{ alumno.nombreCompleto }}
+
+                        </td>
+                        <!-- CARRERA -->
+
+                        <td>
+
+                            <span class="badge badge-blue">
+
+                                {{ alumno.carrera?.nombre }}
+
+                            </span>
+
+                        </td>
+
+                        <!-- SEMESTRE -->
+
+                        <td>
+
+                            <span class="badge badge-gray">
+
+                                {{ alumno.semestre }}°
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- ACCIONES -->
+
+                        <td class="actions">
+
+                            <button class="btn-menu" (click)="abrirMenu(alumno.id)">
+
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+
+                            </button>
+                            @if(menuAbierto===alumno.id){
+
+                            <div class="dropdown-menu">
+
+                                <button class="dropdown-item" (click)="editar(alumno)">
+
+                                    <i class="fa-solid fa-pen"></i>
+
+                                    Editar alumno
+
+                                </button>
+
+                                <label class="dropdown-upload">
+
+                                    <i class="fa-solid fa-camera"></i>
+
+                                    Cambiar fotografía
+
+                                    <input type="file" accept="image/*" (change)="cambiarFoto(alumno,$event)">
+
+                                </label>
+
+                                <button (click)="restablecerPassword(alumno)">
+
+                                    <i class="fa-solid fa-key"></i>
+
+                                    Restablecer contraseña
+
+                                </button>
+
+                                <hr>
+
+                                @if(alumno.credencial){
+
+                                <button (click)="regenerarCredencial(alumno)">
+
+                                    <i class="fa-solid fa-rotate-right"></i>
+
+                                    Regenerar credencial
+
+                                </button>
+
+                                <button (click)="validarCredencial(alumno)">
+
+                                    <i class="fa-solid fa-circle-check"></i>
+
+                                    Validar credencial
+
+                                </button>
+
+                                <button (click)="activarCredencial(alumno)">
+
+                                    <i class="fa-solid fa-play"></i>
+
+                                    Activar credencial
+
+                                </button>
+
+                                <button (click)="cancelarCredencial(alumno)">
+
+                                    <i class="fa-solid fa-ban"></i>
+
+                                    Cancelar credencial
+
+                                </button>
+
+                                <button class="danger" (click)="eliminarCredencial(alumno)">
+
+                                    <i class="fa-solid fa-id-card"></i>
+
+                                    Eliminar credencial
+
+                                </button>
+
+                                }
+
+                                <hr>
+
+                                <button class="danger" (click)="eliminarAlumno(alumno)">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                    Eliminar alumno
+
+                                </button>
+
+                            </div>
+
+                            }
+
+                        </td>
+
+                    </tr>
+
+                    }
+
+                    }
+                    @if(!cargando && alumnosFiltrados.length===0){
+
+                    <tr>
+
+                        <td colspan="7">
+
+                            <div class="empty-state">
+
+                                <i class="fa-solid fa-user-graduate"></i>
+
+                                <h3>
+
+                                    No se encontraron alumnos
+
+                                </h3>
+
+                                <p>
+
+                                    Intenta modificar los filtros o registra un nuevo alumno.
+
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    }
+
+                </tbody>
+
+            </table>
+
+                 <!-- ==========================================
+MODAL EDITAR
+========================================== -->
+
+            <div class="modal-backdrop" *ngIf="mostrarModalEditar">
+
+                <div class="edit-modal">
+
+                    <div class="modal-header">
+
+                        <h2>
+
+                            <i class="fa-solid fa-user-pen"></i>
+
+                            Editar alumno
+
+                        </h2>
+
+                        <button class="close-btn" (click)="cerrarModalEditar()">
+
+                            <i class="fa-solid fa-xmark"></i>
+
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="form-group">
+
+                            <label>Nombre completo</label>
+
+                            <input type="text" [(ngModel)]="alumnoEditar.nombreCompleto">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Matrícula</label>
+
+                            <input type="text" [(ngModel)]="alumnoEditar.matricula" disabled>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Semestre</label>
+
+                            <input type="number" [(ngModel)]="alumnoEditar.semestre">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Carrera</label>
+
+                            <select [(ngModel)]="alumnoEditar.carrera.id">
+
+                                <option *ngFor="let c of carreras" [value]="c.id">
+
+                                    {{ c.nombre }}
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button class="btn-secondary" (click)="cerrarModalEditar()">
+
+                            Cancelar
+
+                        </button>
+
+                        <button class="btn-primary" (click)="guardarEdicion()">
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            Guardar cambios
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+       
+        <!-- ===================================== -->
+        <!-- FOOTER -->
+        <!-- ===================================== -->
+
+        <div class="table-footer">
+
+            <div class="footer-info">
+
+                Mostrando
+
+                <strong>
+
+                    {{ alumnosPagina.length }}
+
+                </strong>
+
+                de
+
+                <strong>
+
+                    {{ alumnosFiltrados.length }}
+
+                </strong>
+
+                alumnos
+
+            </div>
+
+            <div class="pagination">
+
+                <button class="page-btn" [disabled]="paginaActual===1" (click)="cambiarPagina(paginaActual-1)">
+
+                    <i class="fa-solid fa-chevron-left"></i>
+
+                </button>
+
+                <span class="page-number">
+
+                    Página
+
+                    <strong>
+
+                        {{ paginaActual }}
+
+                    </strong>
+
+                    de
+
+                    <strong>
+
+                        {{ totalPaginas }}
+
+                    </strong>
+
+                </span>
+
+                <button class="page-btn" [disabled]="paginaActual===totalPaginas"
+                    (click)="cambiarPagina(paginaActual+1)">
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</div>

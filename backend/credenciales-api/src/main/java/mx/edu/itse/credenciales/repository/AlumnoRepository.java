@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface AlumnoRepository
         extends JpaRepository<Alumno, Long> {
 
+                
+
     //========================================
     // LOGIN / PERFIL
     //========================================
@@ -71,5 +73,9 @@ public interface AlumnoRepository
     List<Alumno> findTop5ByOrderByIdDesc();
 
     Alumno findTopByOrderByIdDesc();
+
+    Optional<Alumno> findByFotografiaId(Long fotografiaId);
+
+
 
 }

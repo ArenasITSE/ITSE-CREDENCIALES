@@ -519,4 +519,78 @@ public class AlumnoService {
                 .build();
 
     }
+
+    @Transactional
+public void eliminarCompleto(Long alumnoId) throws Exception {
+
+    Alumno alumno = obtenerPorId(alumnoId);
+
+    //=========================
+    // ELIMINAR CREDENCIAL
+    //=========================
+
+    if (alumno.getId() != null) {
+
+        credencialService
+
+                .obtenerTodas()
+
+                .stream()
+
+                .filter(c ->
+
+                        c.getAlumno().getId()
+                                .equals(alumnoId)
+
+                )
+
+                .findFirst()
+
+                .ifPresent(c -> {
+
+                    credencialService.eliminarCredencial(
+
+                            c.getId()
+
+                    );
+
+                });
+
+    }
+
+    //=========================
+    // ELIMINAR FOTO
+    //=========================
+
+    if (alumno.getFotografia() != null) {
+
+        fotografiaService.eliminarFoto(
+
+                alumno.getFotografia().getId()
+
+        );
+
+    }
+
+    //=========================
+    // ELIMINAR USUARIO
+    //=========================
+
+    usuarioRepository.delete(
+
+            alumno.getUsuario()
+
+    );
+
+    //=========================
+    // ELIMINAR ALUMNO
+    //=========================
+
+    alumnoRepository.delete(
+
+            alumno
+
+    );
+
+}
 }

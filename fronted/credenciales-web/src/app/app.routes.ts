@@ -13,6 +13,7 @@ import { Perfil } from './pages/perfil/perfil';
 import { Usuarios } from './pages/usuarios/usuarios';
 import { Auditoria } from './pages/auditoria/auditoria';
 import { Configuracion } from './pages/configuracion/configuracion';
+import { Alumnosdash} from './pages/admin/alumnosdash/alumnosdash';
 
 
 export const routes: Routes = [
@@ -39,6 +40,12 @@ export const routes: Routes = [
   component: NuevoAlumno,
   canActivate: [authGuard]
 },
+{
+  path: 'alumnos-dash',
+  component: Alumnosdash,
+  canActivate: [authGuard]
+},
+
   {
     path: 'alumnos',
     component: Alumnos,

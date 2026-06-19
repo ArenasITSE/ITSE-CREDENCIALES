@@ -6,6 +6,7 @@ import mx.edu.itse.credenciales.dto.AlumnoDTO;
 import mx.edu.itse.credenciales.dto.AlumnoResponseDTO;
 import mx.edu.itse.credenciales.entity.Alumno;
 import mx.edu.itse.credenciales.service.AlumnoService;
+import mx.edu.itse.credenciales.service.CredencialService;
 import mx.edu.itse.credenciales.service.FotografiaService;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class AlumnoController {
 
     private final AlumnoService alumnoService;
     private final FotografiaService fotografiaService;
+    private final CredencialService credencialService;
 
     @GetMapping
     public List<Alumno> listar() {
@@ -57,15 +59,16 @@ public RegistrarAlumnoResponse registrarCompleto(
 
 }
 
-    @DeleteMapping("/{id}")
-    public String eliminar(@PathVariable Long id) {
+@DeleteMapping("/{id}")
+public String eliminar(@PathVariable Long id) throws Exception {
 
-        alumnoService.eliminar(id);
+    alumnoService.eliminarCompleto(id);
 
-        return "Alumno deshabilitado correctamente";
-    }
+    return "Alumno eliminado correctamente";
 
-    @PutMapping("/{id}/foto")
+}
+
+ @PutMapping("/{id}/foto")
 public String actualizarFoto(
 
         @PathVariable Long id,
@@ -74,7 +77,13 @@ public String actualizarFoto(
 
 ) throws IOException {
 
-    fotografiaService.subirFoto(id, foto);
+    fotografiaService.reemplazarFoto(
+
+            id,
+
+            foto
+
+    );
 
     return "Fotografía actualizada correctamente";
 
@@ -107,7 +116,57 @@ public Alumno actualizar(
 
 }
 
+@DeleteMapping("/{id}/credencial")
+public String eliminarCredencial(
+        @PathVariable Long id
+) throws Exception {
 
+    credencialService.eliminarCredencial(id);
 
+    return "Credencial eliminada correctamente";
 
+}
+
+@PutMapping("/{id}/credencial/regenerar")
+public String regenerarCredencial(
+        @PathVariable Long id
+) throws Exception {
+
+    credencialService.regenerarCredencial(id);
+
+    return "Credencial regenerada correctamente";
+
+}
+
+@PutMapping("/{id}/credencial/cancelar")
+public String cancelarCredencial(
+        @PathVariable Long id
+) {
+
+    credencialService.cancelarCredencial(id);
+
+    return "Credencial cancelada";
+
+}
+
+@PutMapping("/{id}/credencial/activar")
+public String activarCredencial(
+        @PathVariable Long id
+) {
+
+    credencialService.activarCredencial(id);
+
+    return "Credencial activada";
+
+}
+@PutMapping("/{id}/credencial/validar")
+public String validarCredencial(
+        @PathVariable Long id
+) {
+
+    credencialService.validarCredencial(id);
+
+    return "Credencial validada";
+
+}
 }
