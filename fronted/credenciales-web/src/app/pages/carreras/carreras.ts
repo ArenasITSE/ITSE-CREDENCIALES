@@ -56,15 +56,13 @@ export class Carreras implements OnInit {
 
 carrera: Carrera = {
 
-    id: 0,
+    nombre:'',
 
-    nombre: '',
+    abreviatura:'',
 
-    abreviatura: '',
+    totalAlumnos:0
 
-    totalAlumnos: 0
-
-};
+} as Carrera;
   //==========================================
   // INIT
   //==========================================
@@ -186,17 +184,15 @@ carrera: Carrera = {
 
     this.editando = false;
 
-    this.carrera = {
+   this.carrera = {
 
-    id: 0,
+    nombre:'',
 
-    nombre: '',
+    abreviatura:'',
 
-    abreviatura: '',
+    totalAlumnos:0
 
-    totalAlumnos: 0
-
-};
+} as Carrera;
 
     this.mostrarModal = true;
 
@@ -237,15 +233,13 @@ this.carrera = {
 
     this.carrera = {
 
-    id: 0,
+    nombre:'',
 
-    nombre: '',
+    abreviatura:'',
 
-    abreviatura: '',
+    totalAlumnos:0
 
-    totalAlumnos: 0
-
-};
+} as Carrera;
   }
 
     //==========================================

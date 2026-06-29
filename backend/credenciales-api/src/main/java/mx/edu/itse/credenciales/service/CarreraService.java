@@ -54,24 +54,19 @@ public class CarreraService {
     //==========================================
     // REGISTRAR
     //==========================================
+public Carrera guardar(Carrera carrera){
 
-    public Carrera guardar(Carrera carrera) {
+    if(carreraRepository.existsByNombre(carrera.getNombre())){
 
-        if(carreraRepository.existsByNombre(
-                carrera.getNombre()
-        )){
-
-            throw new RuntimeException(
-                    "La carrera ya existe."
-            );
-
-        }
-
-        return carreraRepository.save(
-                carrera
-        );
+        throw new RuntimeException("La carrera ya existe.");
 
     }
+
+    carrera.setId(null);
+
+    return carreraRepository.save(carrera);
+
+}
 
     //==========================================
     // ACTUALIZAR
