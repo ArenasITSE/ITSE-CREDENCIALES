@@ -14,6 +14,34 @@ export interface Credencial {
 
   fechaGeneracion: string;
 
-  alumno: any;
+  fechaVencimiento?: string;
+
+  alumno: {
+
+    id: number;
+
+    nombreCompleto: string;
+
+    matricula: string;
+
+    semestre: number;
+
+    carrera: {
+
+      id: number;
+
+      nombre: string;
+
+    };
+
+    fotografia: {
+
+      id: number;
+
+      ruta: string;
+
+    };
+
+  };
 
 }

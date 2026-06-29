@@ -7,14 +7,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CarreraDTO {
+public class DashboardCarreraDTO {
 
-    private Long id;
-
-    private String nombre;
-
-    private String abreviatura;
+    private Long totalCarreras;
 
     private Long totalAlumnos;
+
+    private Long credencialesActivas;
 
 }

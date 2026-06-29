@@ -3,6 +3,7 @@ package mx.edu.itse.credenciales.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Entity
 @Table(name = "carreras")
 @Getter
@@ -22,6 +23,4 @@ public class Carrera {
     @Column(nullable = false, unique = true)
     private String abreviatura;
 
-    @Builder.Default
-    private Boolean activo = true;
 }

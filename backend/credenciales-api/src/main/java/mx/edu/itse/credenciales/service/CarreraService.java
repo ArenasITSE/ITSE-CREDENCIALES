@@ -1,8 +1,12 @@
 package mx.edu.itse.credenciales.service;
 
 import lombok.RequiredArgsConstructor;
+import mx.edu.itse.credenciales.dto.CarreraDTO;
+import mx.edu.itse.credenciales.dto.DashboardCarreraDTO;
 import mx.edu.itse.credenciales.entity.Carrera;
+import mx.edu.itse.credenciales.repository.AlumnoRepository;
 import mx.edu.itse.credenciales.repository.CarreraRepository;
+import mx.edu.itse.credenciales.repository.CredencialRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,34 +17,146 @@ public class CarreraService {
 
     private final CarreraRepository carreraRepository;
 
-    public List<Carrera> obtenerTodas() {
-        return carreraRepository.findAll();
-    }
+    private final AlumnoRepository alumnoRepository;
 
-    public Carrera guardar(Carrera carrera) {
-        return carreraRepository.save(carrera);
-    }
+    private final CredencialRepository credencialRepository;
+
+    //==========================================
+    // LISTAR
+    //==========================================
+
+    public List<CarreraDTO> obtenerTodas(){
+
+    return carreraRepository.listarConTotalAlumnos();
+
+}
+
+    //==========================================
+    // OBTENER
+    //==========================================
 
     public Carrera obtenerPorId(Long id) {
-        return carreraRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Carrera no encontrada"));
+
+        return carreraRepository
+
+                .findById(id)
+
+                .orElseThrow(() ->
+
+                        new RuntimeException(
+                                "Carrera no encontrada."
+                        )
+
+                );
+
     }
 
-    public Carrera actualizar(Long id, Carrera carreraActualizada) {
+    //==========================================
+    // REGISTRAR
+    //==========================================
+
+    public Carrera guardar(Carrera carrera) {
+
+        if(carreraRepository.existsByNombre(
+                carrera.getNombre()
+        )){
+
+            throw new RuntimeException(
+                    "La carrera ya existe."
+            );
+
+        }
+
+        return carreraRepository.save(
+                carrera
+        );
+
+    }
+
+    //==========================================
+    // ACTUALIZAR
+    //==========================================
+
+    public Carrera actualizar(
+
+            Long id,
+
+            Carrera nueva
+
+    ){
 
         Carrera carrera = obtenerPorId(id);
 
-        carrera.setNombre(carreraActualizada.getNombre());
-        carrera.setAbreviatura(carreraActualizada.getAbreviatura());
-        carrera.setActivo(carreraActualizada.getActivo());
+        carrera.setNombre(
+                nueva.getNombre()
+        );
 
-        return carreraRepository.save(carrera);
+        carrera.setAbreviatura(
+                nueva.getAbreviatura()
+        );
+
+        return carreraRepository.save(
+                carrera
+        );
+
     }
 
-    public void eliminar(Long id) {
+    //==========================================
+    // ELIMINAR
+    //==========================================
 
-        Carrera carrera = obtenerPorId(id);
+    public void eliminar(Long id){
 
-        carreraRepository.delete(carrera);
+        if(
+
+                alumnoRepository
+
+                        .existsByCarreraId(id)
+
+        ){
+
+            throw new RuntimeException(
+
+                    "No es posible eliminar la carrera porque tiene alumnos registrados."
+
+            );
+
+        }
+
+        carreraRepository.deleteById(id);
+
     }
+
+    //==========================================
+    // DASHBOARD
+    //==========================================
+
+    public DashboardCarreraDTO dashboard(){
+
+        return DashboardCarreraDTO
+
+                .builder()
+
+                .totalCarreras(
+
+                        carreraRepository.count()
+
+                )
+
+                .totalAlumnos(
+
+                        alumnoRepository.count()
+
+                )
+
+                .credencialesActivas(
+
+                        credencialRepository.countByEstado("ACTIVA")
+
+                )
+
+                .build();
+
+    }
+
 }

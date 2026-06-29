@@ -35,6 +35,10 @@ public class Credencial {
     @Builder.Default
     private LocalDateTime fechaGeneracion = LocalDateTime.now();
 
+    @Builder.Default
+private LocalDateTime fechaVencimiento =
+        LocalDateTime.now().plusYears(1);
+
     @OneToOne
     @JoinColumn(name = "alumno_id")
     private Alumno alumno;

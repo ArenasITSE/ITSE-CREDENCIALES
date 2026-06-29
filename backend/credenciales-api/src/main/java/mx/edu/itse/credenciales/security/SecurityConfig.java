@@ -64,11 +64,7 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "/api/credenciales/pdf/**"
-                        ).hasAnyRole(
-                                "ALUMNO",
-                                "ADMINISTRADOR",
-                                "CONTROL_ESCOLAR"
-                        )
+                        ).permitAll()
 
                         // ==========================================
                         // ADMINISTRACIÓN DE ALUMNOS

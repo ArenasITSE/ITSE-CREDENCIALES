@@ -1,1 +1,554 @@
-<p>credenciales works!</p>
+<div class="credenciales-page">
+
+    <!-- ========================================= -->
+    <!-- HEADER -->
+    <!-- ========================================= -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Gestión de Credenciales
+            </h1>
+
+            <p>
+
+                Administración, validación y control de todas las credenciales institucionales.
+
+            </p>
+
+        </div>
+
+        <button
+            class="btn-primary"
+            (click)="cargarCredenciales()">
+
+            <i class="fa-solid fa-rotate-right"></i>
+
+            Actualizar
+
+        </button>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- DASHBOARD -->
+    <!-- ========================================= -->
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card blue">
+
+            <div>
+
+                <span>Credenciales Activas</span>
+
+                <h2>
+
+                    {{dashboard.activas}}
+
+                </h2>
+
+            </div>
+
+            <i class="fa-solid fa-id-card"></i>
+
+        </div>
+
+        <div class="dashboard-card green">
+
+            <div>
+
+                <span>Validadas</span>
+
+                <h2>
+
+                    {{dashboard.validadas}}
+
+                </h2>
+
+            </div>
+
+            <i class="fa-solid fa-circle-check"></i>
+
+        </div>
+
+        <div class="dashboard-card orange">
+
+            <div>
+
+                <span>Canceladas</span>
+
+                <h2>
+
+                    {{dashboard.canceladas}}
+
+                </h2>
+
+            </div>
+
+            <i class="fa-solid fa-ban"></i>
+
+        </div>
+
+        <div class="dashboard-card red">
+
+            <div>
+
+                <span>Por vencer</span>
+
+                <h2>
+
+                    {{dashboard.porVencer}}
+
+                </h2>
+
+            </div>
+
+            <i class="fa-solid fa-clock"></i>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- BUSCADOR -->
+    <!-- ========================================= -->
+
+<!-- ========================================= -->
+<!-- BUSCADOR -->
+<!-- ========================================= -->
+
+<div class="toolbar">
+
+    <div class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+            type="text"
+            placeholder="Buscar por nombre, matrícula, carrera o folio..."
+            [(ngModel)]="textoBusqueda"
+            (keyup)="buscar()">
+
+    </div>
+
+    <button
+        class="btn-light"
+        (click)="limpiarBusqueda()">
+
+        <i class="fa-solid fa-eraser"></i>
+        Limpiar
+
+    </button>
+
+</div>
+
+    <!-- ========================================= -->
+    <!-- TABLA -->
+    <!-- ========================================= -->
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th style="width:90px">
+
+                        Foto
+
+                    </th>
+
+                    <th>
+
+                        Alumno
+
+                    </th>
+
+                    <th>
+
+                        Carrera
+
+                    </th>
+
+                    <th>
+
+                        Folio
+
+                    </th>
+
+                    <th>
+
+                        Estado
+
+                    </th>
+
+                    <th>
+
+                        Generación
+
+                    </th>
+
+                    <th style="width:320px">
+
+                        Acciones
+
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                                <tr *ngFor="let credencial of credenciales">
+
+                    <!-- FOTO -->
+
+                    <td>
+
+                        <img
+
+                            class="foto"
+
+                            [src]="api + '/' + credencial.alumno.fotografia?.ruta"
+
+                            onerror="this.src='assets/img/user.png'">
+
+                    </td>
+
+                    <!-- ALUMNO -->
+
+                    <td>
+
+                        <div class="alumno-info">
+
+                            <strong>
+
+                                {{credencial.alumno.nombreCompleto}}
+
+                            </strong>
+
+                            <span>
+
+                                {{credencial.alumno.matricula}}
+
+                            </span>
+
+                        </div>
+
+                    </td>
+
+                    <!-- CARRERA -->
+
+                    <td>
+
+                        {{credencial.alumno.carrera.nombre}}
+
+                    </td>
+
+                    <!-- FOLIO -->
+
+                    <td>
+
+                        <span class="folio">
+
+                            {{credencial.folio}}
+
+                        </span>
+
+                    </td>
+
+                    <!-- ESTADO -->
+
+                    <td>
+
+                        <span
+
+                            class="estado"
+
+                            [ngClass]="{
+
+                                activa: credencial.estado=='ACTIVA',
+
+                                validada: credencial.estado=='VALIDADA',
+
+                                cancelada: credencial.estado=='CANCELADA'
+
+                            }">
+
+                            {{credencial.estado}}
+
+                        </span>
+
+                    </td>
+
+                    <!-- FECHA -->
+
+                    <td>
+
+                        {{credencial.fechaGeneracion | date:'dd/MM/yyyy'}}
+
+                    </td>
+
+                 <!-- ACCIONES -->
+
+<td>
+
+    <div class="acciones">
+
+        <!-- VER PDF -->
+
+        <button
+
+            class="btn-action blue"
+
+            (click)="verPdf(credencial)">
+
+            <i class="fa-solid fa-eye"></i>
+
+        </button>
+
+        <!-- DESCARGAR PDF -->
+
+        <button
+
+            class="btn-action green"
+
+            (click)="descargarPdf(credencial)">
+
+            <i class="fa-solid fa-download"></i>
+
+        </button>
+
+        <!-- VALIDAR (Solo cuando está ACTIVA) -->
+
+        <button
+
+            *ngIf="credencial.estado=='ACTIVA'"
+
+            class="btn-action teal"
+
+            (click)="validar(credencial)">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+        </button>
+
+        <!-- CANCELAR (Cuando está ACTIVA o VALIDADA) -->
+
+        <button
+
+            *ngIf="credencial.estado!='CANCELADA'"
+
+            class="btn-action orange"
+
+            (click)="cancelar(credencial)">
+
+            <i class="fa-solid fa-ban"></i>
+
+        </button>
+
+        <!-- ACTIVAR (Solo cuando está CANCELADA) -->
+
+        <button
+
+            *ngIf="credencial.estado=='CANCELADA'"
+
+            class="btn-action purple"
+
+            (click)="activar(credencial)">
+
+            <i class="fa-solid fa-power-off"></i>
+
+        </button>
+
+        <!-- HISTORIAL -->
+
+        <button
+
+            class="btn-action gray"
+
+            (click)="verHistorial(credencial)">
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+        </button>
+
+    </div>
+
+</td>
+
+    <!--=========================================
+MODAL DETALLE CREDENCIAL
+==========================================-->
+
+<div
+
+    class="modal-backdrop"
+
+    *ngIf="credencialSeleccionada">
+
+    <div class="modal-card">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+
+                    Información de la Credencial
+
+                </h2>
+
+                <p>
+
+                    Detalles completos del alumno y su credencial.
+
+                </p>
+
+            </div>
+
+            <button
+
+                class="btn-close"
+
+                (click)="cerrarModal()">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="perfil">
+
+                <img
+
+                    [src]="api + '/' + credencialSeleccionada.alumno.fotografia?.ruta"
+
+                    onerror="this.src='assets/img/user.png'">
+
+                <div>
+
+                    <h3>
+
+                        {{credencialSeleccionada.alumno.nombreCompleto}}
+
+                    </h3>
+
+                    <span>
+
+                        {{credencialSeleccionada.alumno.matricula}}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="info-grid">
+
+                <div>
+
+                    <label>Folio</label>
+
+                    <strong>
+
+                        {{credencialSeleccionada.folio}}
+
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <label>Estado</label>
+
+                    <strong>
+
+                        {{credencialSeleccionada.estado}}
+
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <label>Carrera</label>
+
+                    <strong>
+
+                        {{credencialSeleccionada.alumno.carrera.nombre}}
+
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <label>Semestre</label>
+
+                    <strong>
+
+                        {{credencialSeleccionada.alumno.semestre}}
+
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <label>Fecha de generación</label>
+
+                    <strong>
+
+                        {{credencialSeleccionada.fechaGeneracion | date:'dd/MM/yyyy HH:mm'}}
+
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <label>Código de barras</label>
+
+                    <strong>
+
+                        {{credencialSeleccionada.codigoBarras}}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+                        <div class="modal-actions">
+
+                <button
+
+                    class="btn-primary"
+
+                    (click)="descargarPdf(credencialSeleccionada)">
+
+                    <i class="fa-solid fa-download"></i>
+
+                    Descargar PDF
+
+                </button>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

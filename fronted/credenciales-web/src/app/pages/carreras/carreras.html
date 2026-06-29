@@ -1,1 +1,457 @@
-<p>carreras works!</p>
+<div class="carreras-page">
+
+    <!--=========================================
+    HEADER
+    ==========================================-->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+
+                <i class="fa-solid fa-building-columns"></i>
+
+                Gestión de Carreras
+
+            </h1>
+
+            <p>
+
+                Administración de las carreras institucionales del ITSE.
+
+            </p>
+
+        </div>
+
+        <button
+
+            class="btn-refresh"
+
+            (click)="cargarCarreras(); cargarDashboard()">
+
+            <i class="fa-solid fa-rotate-right"></i>
+
+            Actualizar
+
+        </button>
+
+    </div>
+
+    <!--=========================================
+    DASHBOARD
+    ==========================================-->
+
+    <div class="dashboard-grid">
+
+        <div class="card blue">
+
+            <div>
+
+                <span>Total de carreras</span>
+
+                <h2>
+
+                    {{dashboard?.totalCarreras}}
+
+                </h2>
+
+            </div>
+
+            <i class="fa-solid fa-building-columns"></i>
+
+        </div>
+
+        <div class="card green">
+
+            <div>
+
+                <span>Total de alumnos</span>
+
+                <h2>
+
+                    {{dashboard?.totalAlumnos}}
+
+                </h2>
+
+            </div>
+
+            <i class="fa-solid fa-user-graduate"></i>
+
+        </div>
+
+        <div class="card orange">
+
+            <div>
+
+                <span>Credenciales activas</span>
+
+                <h2>
+
+                    {{dashboard?.credencialesActivas}}
+
+                </h2>
+
+            </div>
+
+            <i class="fa-solid fa-id-card"></i>
+
+        </div>
+
+    </div>
+
+    <!--=========================================
+    TOOLBAR
+    ==========================================-->
+
+    <div class="toolbar">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+
+                type="text"
+
+                placeholder="Buscar por nombre o abreviatura..."
+
+                [(ngModel)]="textoBusqueda"
+
+                (keyup)="buscar()">
+
+        </div>
+
+        <div class="toolbar-buttons">
+
+            <button
+
+                class="btn-light"
+
+                (click)="limpiarBusqueda()">
+
+                <i class="fa-solid fa-eraser"></i>
+
+                Limpiar
+
+            </button>
+
+            <button
+
+                class="btn-primary"
+
+                (click)="nuevaCarrera()">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Nueva Carrera
+
+            </button>
+
+        </div>
+
+    </div>
+        <!--=========================================
+    TABLA
+    ==========================================-->
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th width="70">
+
+                        #
+
+                    </th>
+
+                    <th>
+
+                        Nombre de la carrera
+
+                    </th>
+
+                    <th width="180">
+
+                        Abreviatura
+
+                    </th>
+
+                    <th width="180">
+
+    Alumnos
+
+</th>
+
+
+                    <th width="220">
+
+                        Acciones
+
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr
+
+                    *ngFor="let carrera of carreras; let i=index">
+
+                    <!-- NÚMERO -->
+
+                    <td>
+
+                        <div class="badge-id">
+
+                            {{i+1}}
+
+                        </div>
+
+                    </td>
+
+                    <!-- NOMBRE -->
+
+                    <td>
+
+                        <div class="career-info">
+
+                            <h4>
+
+                                {{carrera.nombre}}
+
+                            </h4>
+
+                        </div>
+
+                    </td>
+
+                    <!-- ABREVIATURA -->
+
+                    <td>
+
+                        <span class="badge-abbr">
+
+                            {{carrera.abreviatura}}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+    <span class="badge-alumnos">
+
+        <i class="fa-solid fa-user-graduate"></i>
+
+        {{ carrera.totalAlumnos }}
+
+    </span>
+
+</td>
+
+                    <!-- ACCIONES -->
+
+                    <td>
+
+                        <div class="acciones">
+
+                            <button
+
+                                class="btn-action blue"
+
+                                (click)="editar(carrera)"
+
+                                title="Editar">
+
+                                <i class="fa-solid fa-pen"></i>
+
+                            </button>
+
+                            <button
+
+                                class="btn-action red"
+
+                                (click)="eliminar(carrera)"
+
+                                title="Eliminar">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                <!--=========================================
+                EMPTY STATE
+                ==========================================-->
+
+                <tr *ngIf="carreras.length==0">
+
+                    <td colspan="4">
+
+                        <div class="empty-state">
+
+                            <i class="fa-solid fa-building-columns"></i>
+
+                            <h3>
+
+                                No existen carreras registradas
+
+                            </h3>
+
+                            <p>
+
+                                Presiona "Nueva Carrera" para registrar la primera.
+
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+        <!--=========================================
+    MODAL
+    ==========================================-->
+
+    <div
+
+        class="modal-backdrop"
+
+        *ngIf="mostrarModal">
+
+        <div class="modal-card">
+
+            <!--=========================================
+            HEADER
+            ==========================================-->
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h2>
+
+                        <i class="fa-solid fa-building-columns"></i>
+
+                        {{editando ? 'Editar Carrera' : 'Nueva Carrera'}}
+
+                    </h2>
+
+                    <p>
+
+                        Captura la información de la carrera.
+
+                    </p>
+
+                </div>
+
+                <button
+
+                    class="btn-close"
+
+                    (click)="cerrarModal()">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+            <!--=========================================
+            BODY
+            ==========================================-->
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label>
+
+                        Nombre de la carrera
+
+                    </label>
+
+                    <input
+
+                        type="text"
+
+                        [(ngModel)]="carrera.nombre"
+
+                        placeholder="Ej. Ingeniería en Sistemas Computacionales">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Abreviatura
+
+                    </label>
+
+                    <input
+
+                        type="text"
+
+                        [(ngModel)]="carrera.abreviatura"
+
+                        placeholder="Ej. ISC">
+
+                </div>
+
+            </div>
+                        <!--=========================================
+            FOOTER
+            ==========================================-->
+
+            <div class="modal-footer">
+
+                <button
+
+                    class="btn-secondary"
+
+                    (click)="cerrarModal()">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                    Cancelar
+
+                </button>
+
+                <button
+
+                    class="btn-primary"
+
+                    (click)="guardar()">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    {{editando ? 'Actualizar' : 'Guardar'}}
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

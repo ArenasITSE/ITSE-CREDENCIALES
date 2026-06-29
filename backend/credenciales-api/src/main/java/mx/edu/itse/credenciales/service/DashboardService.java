@@ -58,7 +58,7 @@ public class DashboardService {
                 )
 
                 .totalCarreras(
-                        carreraRepository.countByActivoTrue()
+                        carreraRepository.count()
                 )
 
                 // ==========================================

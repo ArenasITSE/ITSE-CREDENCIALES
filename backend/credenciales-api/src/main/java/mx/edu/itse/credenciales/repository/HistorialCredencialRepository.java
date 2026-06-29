@@ -9,6 +9,7 @@ public interface HistorialCredencialRepository
         extends JpaRepository<HistorialCredencial, Long> {
 
     List<HistorialCredencial> findByCredencialIdOrderByFechaDesc(Long id);
-    void deleteByCredencialId(Long credencialId);
+
+    void deleteByCredencialId(Long id);
 
 }

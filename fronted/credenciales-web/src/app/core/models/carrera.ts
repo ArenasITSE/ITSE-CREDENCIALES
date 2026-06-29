@@ -6,6 +6,6 @@ export interface Carrera {
 
   abreviatura: string;
 
-  activo: boolean;
+  totalAlumnos:number;
 
 }

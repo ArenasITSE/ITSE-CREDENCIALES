@@ -1,9 +1,12 @@
 package mx.edu.itse.credenciales.controller;
 
 import lombok.RequiredArgsConstructor;
+import mx.edu.itse.credenciales.dto.CarreraDTO;
+import mx.edu.itse.credenciales.dto.DashboardCarreraDTO;
 import mx.edu.itse.credenciales.entity.Carrera;
 import mx.edu.itse.credenciales.service.CarreraService;
 import org.springframework.web.bind.annotation.*;
+import mx.edu.itse.credenciales.dto.DashboardCarreraDTO;
 
 import java.util.List;
 
@@ -15,10 +18,13 @@ public class CarreraController {
 
     private final CarreraService carreraService;
 
+ 
     @GetMapping
-    public List<Carrera> listar() {
-        return carreraService.obtenerTodas();
-    }
+public List<CarreraDTO> listar(){
+
+    return carreraService.obtenerTodas();
+
+}
 
     @GetMapping("/{id}")
     public Carrera obtenerPorId(@PathVariable Long id) {
@@ -42,4 +48,14 @@ public class CarreraController {
     public void eliminar(@PathVariable Long id) {
         carreraService.eliminar(id);
     }
+    //==========================================
+// DASHBOARD
+//==========================================
+
+@GetMapping("/dashboard")
+public DashboardCarreraDTO dashboard(){
+
+    return carreraService.dashboard();
+
+}
 }

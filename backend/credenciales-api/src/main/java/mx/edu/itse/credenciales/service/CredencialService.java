@@ -5,12 +5,14 @@ import mx.edu.itse.credenciales.dto.BusquedaCredencialDTO;
 import mx.edu.itse.credenciales.dto.VerificacionCredencialDTO;
 import mx.edu.itse.credenciales.entity.Alumno;
 import mx.edu.itse.credenciales.entity.Credencial;
+import mx.edu.itse.credenciales.entity.HistorialCredencial;
 import mx.edu.itse.credenciales.repository.AlumnoRepository;
 import mx.edu.itse.credenciales.repository.CredencialRepository;
 import org.springframework.stereotype.Service;
 import mx.edu.itse.credenciales.repository.HistorialCredencialRepository;
+import mx.edu.itse.credenciales.dto.DashboardCredencialDTO;
 import java.nio.file.Files;
-import java.nio.file.Path;
+
 import java.nio.file.Paths;
 
 import java.util.List;
@@ -306,15 +308,16 @@ public Credencial validarCredencial(Long id) {
 //=========================================
 // ACTIVAR CREDENCIAL
 //=========================================
-
-public Credencial activarCredencial(Long id) {
+public Credencial activarCredencial(Long id){
 
     Credencial credencial = buscarPorId(id);
 
-    if ("ACTIVA".equals(credencial.getEstado())) {
+    if("ACTIVA".equals(credencial.getEstado())){
+
         throw new RuntimeException(
-                "La credencial ya se encuentra activa"
+                "La credencial ya está activa"
         );
+
     }
 
     credencial.setEstado("ACTIVA");
@@ -322,74 +325,30 @@ public Credencial activarCredencial(Long id) {
     credencial = credencialRepository.save(credencial);
 
     historialService.registrarEvento(
+
             credencial,
+
             "Credencial activada",
+
             "ADMIN"
+
     );
 
     return credencial;
+
 }
+  
+//=========================================
+// BUSCAR CREDENCIALES
+//=========================================
 
-    //=========================================
-    // BUSCAR CREDENCIALES
-    //=========================================
+public List<Credencial> buscar(
+        String texto
+){
 
-    public List<BusquedaCredencialDTO> buscar(
-            String texto
-    ) {
+    return credencialRepository.buscar(texto);
 
-        return credencialRepository
-
-                .buscar(texto)
-
-                .stream()
-
-                .map(c ->
-
-                        BusquedaCredencialDTO.builder()
-
-                                .id(
-                                        c.getId()
-                                )
-
-                                .folio(
-                                        c.getFolio()
-                                )
-
-                                .nombre(
-                                        c.getAlumno()
-                                                .getNombreCompleto()
-                                )
-
-                                .matricula(
-                                        c.getAlumno()
-                                                .getMatricula()
-                                )
-
-                                .carrera(
-                                        c.getAlumno()
-                                                .getCarrera()
-                                                .getNombre()
-                                )
-
-                                .semestre(
-                                        c.getAlumno()
-                                                .getSemestre()
-                                )
-
-                                .estado(
-                                        c.getEstado()
-                                )
-
-                                .build()
-
-                )
-
-                .toList();
-
-    }
-
-    
+}
     //=========================================
 // ELIMINAR CREDENCIAL
 //=========================================
@@ -439,5 +398,50 @@ public Credencial regenerarCredencial(Long id) throws Exception {
     return generarCredencial(alumno);
 
 }
+
+
+
+//=========================================
+// DASHBOARD
+//=========================================
+
+public DashboardCredencialDTO dashboard(){
+
+    return DashboardCredencialDTO.builder()
+
+            .activas(
+                    credencialRepository.countByEstado("ACTIVA")
+            )
+
+            .canceladas(
+                    credencialRepository.countByEstado("CANCELADA")
+            )
+
+            .validadas(
+                    credencialRepository.countByEstado("VALIDADA")
+            )
+
+            .porVencer(
+                    0L
+            )
+
+            .build();
+
+}
+
+//=========================================
+// HISTORIAL
+//=========================================
+
+public List<HistorialCredencial> obtenerHistorial(Long id){
+
+    return historialRepository
+
+            .findByCredencialIdOrderByFechaDesc(id);
+
+}
+
+
+
 
 }

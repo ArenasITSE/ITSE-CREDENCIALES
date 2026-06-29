@@ -76,6 +76,6 @@ public interface AlumnoRepository
 
     Optional<Alumno> findByFotografiaId(Long fotografiaId);
 
-
+    boolean existsByCarreraId(Long carreraId);
 
 }
