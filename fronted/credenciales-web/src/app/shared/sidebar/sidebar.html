@@ -1,1 +1,96 @@
-<p>sidebar works!</p>
+<div class="sidebar">
+
+    <!--==========================================
+    LOGO
+    ==========================================-->
+
+    <div class="sidebar-logo">
+
+        <img
+            src="assets/logos/itse-logo_white.png"
+            alt="ITSE">
+
+    </div>
+
+    <!--==========================================
+    MENÚ PRINCIPAL
+    ==========================================-->
+
+    <nav class="sidebar-menu">
+
+        <a
+            routerLink="/admin/dashboard"
+            routerLinkActive="active"
+            class="menu-item">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>Dashboard</span>
+
+        </a>
+
+        <a
+            routerLink="/admin/nuevo-alumno"
+            routerLinkActive="active"
+            class="menu-item">
+
+            <i class="fa-solid fa-user-plus"></i>
+
+            <span>Nuevo Alumno</span>
+
+        </a>
+
+        <a
+            routerLink="/admin/alumnos"
+            routerLinkActive="active"
+            class="menu-item">
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>Alumnos</span>
+
+        </a>
+
+        <a
+            routerLink="/admin/credenciales"
+            routerLinkActive="active"
+            class="menu-item">
+
+            <i class="fa-solid fa-id-card"></i>
+
+            <span>Credenciales</span>
+
+        </a>
+
+        <a
+            routerLink="/admin/carreras"
+            routerLinkActive="active"
+            class="menu-item">
+
+            <i class="fa-solid fa-building-columns"></i>
+
+            <span>Carreras</span>
+
+        </a>
+
+    </nav>
+
+    <!--==========================================
+    FOOTER
+    ==========================================-->
+
+    <div class="sidebar-footer">
+
+        <button
+            class="logout-btn"
+            (click)="cerrarSesion()">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>Cerrar sesión</span>
+
+        </button>
+
+    </div>
+
+</div>

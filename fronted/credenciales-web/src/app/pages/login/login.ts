@@ -89,19 +89,19 @@ export class Login {
 
           }).then(() => {
 
-            if (rol === 'ALUMNO') {
+           if (rol === 'ALUMNO') {
 
-              this.router.navigate([
-                '/alumnos'
-              ]);
+  this.router.navigate([
+    '/credencial-alumnos'
+  ]);
 
-            } else {
+} else {
 
-              this.router.navigate([
-                '/dashboard'
-              ]);
+  this.router.navigate([
+    '/admin/dashboard'
+  ]);
 
-            }
+}
 
           });
 

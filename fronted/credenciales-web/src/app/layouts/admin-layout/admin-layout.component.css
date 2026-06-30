@@ -1,0 +1,21 @@
+.main-content{
+
+    margin-left:280px;
+
+    min-height:100vh;
+
+    background:#f4f7fb;
+
+    padding:30px;
+
+}
+
+@media(max-width:900px){
+
+    .main-content{
+
+        margin-left:80px;
+
+    }
+
+}

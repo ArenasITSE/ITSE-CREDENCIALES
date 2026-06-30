@@ -1,9 +1,6 @@
 import { CanActivateFn } from '@angular/router';
-
 import { inject } from '@angular/core';
-
 import { Router } from '@angular/router';
-
 import { StorageService } from '../services/storage.service';
 
 export const loginGuard: CanActivateFn = () => {
@@ -14,7 +11,7 @@ export const loginGuard: CanActivateFn = () => {
 
   if (storage.estaLogueado()) {
 
-    router.navigate(['/dashboard']);
+    router.navigate(['/admin/dashboard']);
 
     return false;
 
