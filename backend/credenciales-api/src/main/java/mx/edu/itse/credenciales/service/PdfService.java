@@ -50,8 +50,8 @@ public class PdfService {
         Document document =
                 new Document(
                         new Rectangle(
-                                250,
-                                420
+                                420,
+                                280
                         ),
                         0,
                         0,
@@ -78,12 +78,12 @@ public class PdfService {
 
         Image fondo =
                 Image.getInstance(
-                        "src/main/resources/plantillas/credencial_frente5.png"
+                        "src/main/resources/plantillas/credencial_frente1.png"
                 );
 
         fondo.scaleAbsolute(
-                250,
-                420
+                420,
+                280
         );
 
         fondo.setAbsolutePosition(
@@ -116,13 +116,13 @@ public class PdfService {
                             );
 
                     foto.scaleAbsolute(
-                            65,
-                            96
+                            82,
+                            108
                     );
 
                     foto.setAbsolutePosition(
-                            20,
-                            186
+                            27,
+                            95
                     );
 
                     document.add(
@@ -206,11 +206,10 @@ escribirTexto(
         credencial.getAlumno()
                 .getNombreCompleto(),
 
-        127,
+        145,
+        188,
 
-        257,
-
-        110,
+        150,
 
         Font.NORMAL,
 
@@ -234,11 +233,9 @@ escribirCarrera(
                 .getCarrera()
                 .getNombre(),
 
-        127,
-
-        230,
-
-        110
+        145,
+        155,
+        150
 
 );
        
@@ -261,9 +258,8 @@ escribirCarrera(
 
                 ),
 
-                127,
-
-                180,
+                145,
+                122,
 
                 0
 
@@ -289,9 +285,8 @@ ColumnText.showTextAligned(
                 
         ),
 
-        127,
-
-        143,
+        145,
+        89,
 
         0
 
@@ -315,10 +310,8 @@ ColumnText.showTextAligned(
 
                 ),
 
-                127,
-
-                107,
-
+                145,
+                56,
                 0
 
         );
@@ -341,9 +334,8 @@ ColumnText.showTextAligned(
 
                 ),
 
-                127,
-
-                70,
+                285,
+                89,
 
                 0
 
@@ -370,14 +362,14 @@ ColumnText.showTextAligned(
                             );
 
                     qr.scaleAbsolute(
-                            50,
-                            58
-                    );
+                                70,
+                                70
+                        );
 
-                    qr.setAbsolutePosition(
-                            16,
-                            42
-                    );
+                        qr.setAbsolutePosition(
+                                325,
+                                52
+                        );
 
                     document.add(
                             qr
