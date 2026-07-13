@@ -115,15 +115,15 @@ public class PdfService {
                                     archivoFoto.getAbsolutePath()
                             );
 
-                    foto.scaleAbsolute(
-                            82,
-                            108
-                    );
+                          foto.scaleAbsolute(
+                                90,
+                                118
+                        );
 
-                    foto.setAbsolutePosition(
-                            27,
-                            95
-                    );
+                         foto.setAbsolutePosition(
+                                22,
+                                88
+                        );
 
                     document.add(
                             foto
@@ -165,24 +165,24 @@ public class PdfService {
                 );
 
         Font datosFont =
-                new Font(
-                        helvetica,
-                        8,
-                        Font.BOLD,
-                        BaseColor.BLACK
-                );
+        new Font(
+                helvetica,
+                9,
+                Font.NORMAL,
+                BaseColor.BLACK
+        );
 
         Font estadoFont =
-                new Font(
-                        helvetica,
-                        8,
-                        Font.BOLD,
-                        new BaseColor(
-                                120,
-                                0,
-                                30
-                        )
-                );
+        new Font(
+                helvetica,
+                9,
+                Font.BOLD,
+                new BaseColor(
+                        120,
+                        0,
+                        30
+                )
+        );
 
         Font pieFont =
                 new Font(
@@ -206,10 +206,9 @@ escribirTexto(
         credencial.getAlumno()
                 .getNombreCompleto(),
 
-        145,
-        188,
-
-        150,
+        172,
+        186,
+        165,
 
         Font.NORMAL,
 
@@ -233,9 +232,9 @@ escribirCarrera(
                 .getCarrera()
                 .getNombre(),
 
-        145,
-        155,
-        150
+        173,
+        170,
+        170
 
 );
        
@@ -258,9 +257,8 @@ escribirCarrera(
 
                 ),
 
-                145,
-                122,
-
+                183,
+                135,
                 0
 
         );
@@ -285,8 +283,8 @@ ColumnText.showTextAligned(
                 
         ),
 
-        145,
-        89,
+        180,
+        110,
 
         0
 
@@ -310,8 +308,8 @@ ColumnText.showTextAligned(
 
                 ),
 
-                145,
-                56,
+                170,
+                85,
                 0
 
         );
@@ -334,9 +332,8 @@ ColumnText.showTextAligned(
 
                 ),
 
-                285,
-                89,
-
+                255,
+                110,
                 0
 
         );
@@ -362,13 +359,13 @@ ColumnText.showTextAligned(
                             );
 
                     qr.scaleAbsolute(
-                                70,
-                                70
+                                65,
+                                61
                         );
 
                         qr.setAbsolutePosition(
-                                325,
-                                52
+                                321,
+                                72
                         );
 
                     document.add(
@@ -424,7 +421,7 @@ return rutaPdf;
             BaseColor color
     ) {
 
-        float size = 12;
+        float size = 10;
 
         while (size >= 7) {
 
