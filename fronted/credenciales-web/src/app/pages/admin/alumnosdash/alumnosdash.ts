@@ -452,13 +452,15 @@ guardarEdicion():void{
 
   const datos={
 
-    nombreCompleto:this.alumnoEditar.nombreCompleto,
+  nombreCompleto:this.alumnoEditar.nombreCompleto,
 
-    semestre:this.alumnoEditar.semestre,
+  matricula:this.alumnoEditar.matricula,
 
-    carreraId:this.alumnoEditar.carrera.id
+  semestre:this.alumnoEditar.semestre,
 
-  };
+  carreraId:this.alumnoEditar.carrera.id
+
+};
 
   this.alumnoService
 

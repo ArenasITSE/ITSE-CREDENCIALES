@@ -14,6 +14,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import mx.edu.itse.credenciales.entity.Credencial;
 import mx.edu.itse.credenciales.repository.CredencialRepository;
+
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import com.itextpdf.text.Element;
 import mx.edu.itse.credenciales.service.HistorialCredencialService;
@@ -77,9 +79,17 @@ public class PdfService {
         // ===========================
 
         Image fondo =
-                Image.getInstance(
-                        "src/main/resources/plantillas/credencial_frente1.png"
-                );
+        Image.getInstance(
+
+                new ClassPathResource(
+                        "plantillas/credencial_frente1.png"
+                )
+
+                .getInputStream()
+
+                .readAllBytes()
+
+        );
 
         fondo.scaleAbsolute(
                 420,
@@ -207,7 +217,7 @@ escribirTexto(
                 .getNombreCompleto(),
 
         172,
-        186,
+        187,
         165,
 
         Font.NORMAL,
@@ -233,7 +243,7 @@ escribirCarrera(
                 .getNombre(),
 
         173,
-        170,
+        171,
         170
 
 );
@@ -258,7 +268,7 @@ escribirCarrera(
                 ),
 
                 183,
-                135,
+                134,
                 0
 
         );
@@ -284,7 +294,7 @@ ColumnText.showTextAligned(
         ),
 
         180,
-        110,
+        108,
 
         0
 
@@ -309,7 +319,7 @@ ColumnText.showTextAligned(
                 ),
 
                 170,
-                85,
+                83,
                 0
 
         );
@@ -333,7 +343,7 @@ ColumnText.showTextAligned(
                 ),
 
                 255,
-                110,
+                109,
                 0
 
         );
@@ -359,13 +369,13 @@ ColumnText.showTextAligned(
                             );
 
                     qr.scaleAbsolute(
-                                65,
-                                61
+                                60,
+                                60
                         );
 
                         qr.setAbsolutePosition(
-                                321,
-                                72
+                                326,
+                                75
                         );
 
                     document.add(

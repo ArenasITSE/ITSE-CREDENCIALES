@@ -701,7 +701,7 @@ export class Credenciales implements OnInit {
 
     ) {
 
-      return `http://localhost:8080/${credencial.alumno.fotografia.ruta}`;
+      return `${window.location.origin}/${credencial.alumno.fotografia.ruta}`;
 
     }
 
