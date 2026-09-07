@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { AlumnoService } from '../../../core/services/alumno.service';
 import { CarreraService } from '../../../core/services/carrera.service';
 import { environment } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-alumnosdash',
   standalone: true,
@@ -43,31 +44,34 @@ export class Alumnosdash implements OnInit {
   alumnosFiltrados:any[]=[];
 
   alumnoSeleccionado:any=null;
+
   //==========================================
-// MODAL EDITAR
-//==========================================
+  // MODAL EDITAR
+  //==========================================
 
-mostrarModalEditar = false;
+  mostrarModalEditar = false;
 
-alumnoEditar:any = {
+  alumnoEditar:any = {
 
-  id:0,
+    id:0,
 
-  nombreCompleto:'',
+    nombreCompleto:'',
 
-  matricula:'',
+    matricula:'',
 
-  semestre:1,
+    semestre:1,
 
-  carrera:{
+    nss:'',
 
-    id:null,
+    carrera:{
 
-    nombre:''
+      id:null,
 
-  }
+      nombre:''
 
-};
+    }
+
+  };
 
   //==========================================
   // FILTROS
@@ -110,12 +114,12 @@ alumnoEditar:any = {
   ngOnInit(): void {
 
     this.cargarCarreras();
-    this.cargarAlumnos();
 
+    this.cargarAlumnos();
 
   }
 
-    //==========================================
+  //==========================================
   // CARGAR ALUMNOS
   //==========================================
 
@@ -130,8 +134,6 @@ alumnoEditar:any = {
         next: (resp:any[]) => {
 
           this.alumnos = resp;
-
-        
 
           this.obtenerSemestres();
 
@@ -162,8 +164,6 @@ alumnoEditar:any = {
       });
 
   }
-
-
 
   //==========================================
   // OBTENER SEMESTRES
@@ -245,9 +245,9 @@ alumnoEditar:any = {
 
         a =>
 
-        a.carrera?.nombre ===
+          a.carrera?.nombre ===
 
-        this.filtroCarrera
+          this.filtroCarrera
 
       );
 
@@ -263,9 +263,9 @@ alumnoEditar:any = {
 
         a =>
 
-        a.semestre ==
+          a.semestre ==
 
-        this.filtroSemestre
+          this.filtroSemestre
 
       );
 
@@ -276,7 +276,8 @@ alumnoEditar:any = {
     this.calcularPaginas();
 
   }
-    //==========================================
+
+  //==========================================
   // PAGINACIÓN
   //==========================================
 
@@ -402,129 +403,137 @@ alumnoEditar:any = {
   // EDITAR
   //==========================================
 
-//==========================================
-// ABRIR MODAL EDITAR
-//==========================================
+  //==========================================
+  // ABRIR MODAL EDITAR
+  //==========================================
 
-editar(alumno:any):void{
+  editar(alumno:any):void{
 
-  this.alumnoEditar = {
+    this.alumnoEditar = {
 
-    id: alumno.id,
+      id: alumno.id,
 
-    nombreCompleto: alumno.nombreCompleto,
+      nombreCompleto: alumno.nombreCompleto,
 
-    matricula: alumno.matricula,
+      matricula: alumno.matricula,
 
-    semestre: alumno.semestre,
+      semestre: alumno.semestre,
 
-    carrera:{
+      nss: alumno.nss || '',
 
-      id: alumno.carrera.id,
+      carrera:{
 
-      nombre: alumno.carrera.nombre
+        id: alumno.carrera.id,
 
-    }
-
-  };
-
-  this.mostrarModalEditar = true;
-
-  this.cerrarMenu();
-
-}
-//==========================================
-// CERRAR MODAL
-//==========================================
-
-cerrarModalEditar():void{
-
-  this.mostrarModalEditar=false;
-
-}
-//==========================================
-// GUARDAR CAMBIOS
-//==========================================
-
-guardarEdicion():void{
-
-  this.procesando=true;
-
-  const datos={
-
-  nombreCompleto:this.alumnoEditar.nombreCompleto,
-
-  matricula:this.alumnoEditar.matricula,
-
-  semestre:this.alumnoEditar.semestre,
-
-  carreraId:this.alumnoEditar.carrera.id
-
-};
-
-  this.alumnoService
-
-    .actualizar(
-
-      this.alumnoEditar.id,
-
-      datos
-
-    )
-
-    .subscribe({
-
-      next:()=>{
-
-        this.procesando=false;
-
-        this.mostrarModalEditar=false;
-
-        Swal.fire(
-
-          'Correcto',
-
-          'Alumno actualizado correctamente.',
-
-          'success'
-
-        );
-
-        this.cargarAlumnos();
-
-      },
-
-      error:(err)=>{
-
-        console.error(err);
-
-        this.procesando=false;
-
-        Swal.fire(
-
-          'Error',
-
-          'No fue posible actualizar el alumno.',
-
-          'error'
-
-        );
+        nombre: alumno.carrera.nombre
 
       }
 
-    });
+    };
 
-}
-//==========================================
-// CANCELAR EDICIÓN
-//==========================================
+    this.mostrarModalEditar = true;
 
-cancelarEdicion():void{
+    this.cerrarMenu();
 
-  this.mostrarModalEditar=false;
+  }
 
-}
-    //==========================================
+  //==========================================
+  // CERRAR MODAL
+  //==========================================
+
+  cerrarModalEditar():void{
+
+    this.mostrarModalEditar=false;
+
+  }
+
+  //==========================================
+  // GUARDAR CAMBIOS
+  //==========================================
+
+  guardarEdicion():void{
+
+    this.procesando=true;
+
+    const datos={
+
+      nombreCompleto:this.alumnoEditar.nombreCompleto,
+
+      matricula:this.alumnoEditar.matricula,
+
+      semestre:this.alumnoEditar.semestre,
+
+      nss:this.alumnoEditar.nss,
+
+      carreraId:this.alumnoEditar.carrera.id
+
+    };
+
+    this.alumnoService
+
+      .actualizar(
+
+        this.alumnoEditar.id,
+
+        datos
+
+      )
+
+      .subscribe({
+
+        next:()=>{
+
+          this.procesando=false;
+
+          this.mostrarModalEditar=false;
+
+          Swal.fire(
+
+            'Correcto',
+
+            'Alumno actualizado correctamente.',
+
+            'success'
+
+          );
+
+          this.cargarAlumnos();
+
+        },
+
+        error:(err)=>{
+
+          console.error(err);
+
+          this.procesando=false;
+
+          Swal.fire(
+
+            'Error',
+
+            'No fue posible actualizar el alumno.',
+
+            'error'
+
+          );
+
+        }
+
+      });
+
+  }
+
+  //==========================================
+  // CANCELAR EDICIÓN
+  //==========================================
+
+  cancelarEdicion():void{
+
+    this.mostrarModalEditar=false;
+
+  }
+
+  //==========================================
   // ELIMINAR ALUMNO
   //==========================================
 
@@ -767,7 +776,8 @@ cancelarEdicion():void{
       });
 
   }
-    //==========================================
+
+  //==========================================
   // VALIDAR CREDENCIAL
   //==========================================
 
@@ -925,22 +935,25 @@ cancelarEdicion():void{
 
           next:(resp:string)=>{
 
-    Swal.fire({
+            Swal.fire({
 
-      title:'Contraseña restablecida',
+              title:'Contraseña restablecida',
 
-      html:`
-        <p>La nueva contraseña es:</p>
-        <h2 style="color:#2563eb">${resp}</h2>
-      `,
+              html:`
 
-      icon:'success',
+                <p>La nueva contraseña es:</p>
 
-      confirmButtonText:'Copiar'
+                <h2 style="color:#2563eb">${resp}</h2>
 
-    });
+              `,
 
-},
+              icon:'success',
+
+              confirmButtonText:'Copiar'
+
+            });
+
+          },
 
           error:(err)=>{
 
@@ -1051,61 +1064,61 @@ cancelarEdicion():void{
   }
 
   //==========================================
-// CARGAR CARRERAS
-//==========================================
+  // CARGAR CARRERAS
+  //==========================================
 
-cargarCarreras(): void {
+  cargarCarreras(): void {
 
-  this.carreraService
+    this.carreraService
 
-    .listar()
+      .listar()
 
-    .subscribe({
+      .subscribe({
 
-      next: (resp) => {
+        next: (resp) => {
 
-        this.carreras = resp;
+          this.carreras = resp;
 
-      },
+        },
 
-      error: (err) => {
+        error: (err) => {
 
-        console.error(err);
+          console.error(err);
 
-      }
+        }
 
-    });
-
-}
-
-//==========================================
-// URL FOTO
-//==========================================
-
-obtenerFoto(alumno:any):string{
-
-  if(
-
-    !alumno.fotografia ||
-
-    !alumno.fotografia.ruta
-
-  ){
-
-    return '';
+      });
 
   }
 
-  return environment.apiUrl.replace(
+  //==========================================
+  // URL FOTO
+  //==========================================
 
-    '/api',
+  obtenerFoto(alumno:any):string{
 
-    ''
+    if(
 
-  ) + '/' +
+      !alumno.fotografia ||
 
-  alumno.fotografia.ruta;
+      !alumno.fotografia.ruta
 
-}
+    ){
+
+      return '';
+
+    }
+
+    return environment.apiUrl.replace(
+
+      '/api',
+
+      ''
+
+    ) + '/' +
+
+    alumno.fotografia.ruta;
+
+  }
 
 }

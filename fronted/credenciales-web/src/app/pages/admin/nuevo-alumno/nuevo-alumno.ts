@@ -58,6 +58,8 @@ export class NuevoAlumno implements OnInit {
 
     matricula: '',
 
+    nss: '',
+
     carreraId: null,
 
     semestre: 1
@@ -70,7 +72,7 @@ export class NuevoAlumno implements OnInit {
 
   }
 
-    //=========================================
+  //=========================================
   // CARGAR CARRERAS
   //=========================================
 
@@ -138,6 +140,8 @@ export class NuevoAlumno implements OnInit {
 
       matricula: '',
 
+      nss: '',
+
       carreraId: null,
 
       semestre: 1
@@ -148,7 +152,7 @@ export class NuevoAlumno implements OnInit {
 
   }
 
-    //=========================================
+  //=========================================
   // GUARDAR ALUMNO
   //=========================================
 
@@ -234,6 +238,11 @@ export class NuevoAlumno implements OnInit {
     );
 
     formData.append(
+      'nss',
+      this.alumno.nss
+    );
+
+    formData.append(
       'carreraId',
       String(this.alumno.carreraId)
     );
@@ -281,7 +290,8 @@ export class NuevoAlumno implements OnInit {
           this.limpiarFormulario();
 
         },
-                error: (err) => {
+
+        error: (err) => {
 
           this.cargando = false;
 
@@ -320,15 +330,17 @@ export class NuevoAlumno implements OnInit {
   }
 
   semestres = [1,2,3,4,5,6,7,8,9,];
+
   obtenerNombreCarrera(): string {
 
-  const carrera = this.carreras.find(
+    const carrera = this.carreras.find(
 
-    c => c.id == this.alumno.carreraId
+      c => c.id == this.alumno.carreraId
 
-  );
+    );
 
-  return carrera ? carrera.nombre : 'Sin seleccionar';
+    return carrera ? carrera.nombre : 'Sin seleccionar';
 
-}
+  }
+
 }

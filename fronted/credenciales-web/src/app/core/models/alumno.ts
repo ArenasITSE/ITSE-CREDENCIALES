@@ -8,6 +8,8 @@ export interface Alumno {
 
   semestre: number;
 
+  nss: string;
+
   activo: boolean;
 
   carrera: any;

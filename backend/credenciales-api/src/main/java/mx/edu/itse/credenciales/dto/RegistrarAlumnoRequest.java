@@ -16,6 +16,8 @@ public class RegistrarAlumnoRequest {
 
     private Integer semestre;
 
+    private String nss;
+
     private MultipartFile foto;
 
 }

@@ -25,6 +25,9 @@ public class Alumno {
     @Column(nullable = false)
     private Integer semestre;
 
+    @Column
+    private String nss;
+
     @Builder.Default
     private Boolean activo = true;
 

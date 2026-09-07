@@ -19,4 +19,6 @@ public class AlumnoDTO {
 
     private Long usuarioId;
 
+    private String nss;
+
 }

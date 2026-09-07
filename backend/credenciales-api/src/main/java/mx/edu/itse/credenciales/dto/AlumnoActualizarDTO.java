@@ -13,4 +13,6 @@ public class AlumnoActualizarDTO {
 
     private Long carreraId;
 
+    private String nss;
+
 }

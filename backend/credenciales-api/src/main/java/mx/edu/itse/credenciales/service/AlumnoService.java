@@ -78,15 +78,14 @@ public class AlumnoService {
                 .orElseThrow(() ->
 
                         new RuntimeException(
-
                                 "Alumno no encontrado"
-
                         )
 
                 );
 
     }
-        //=========================================
+
+    //=========================================
     // REGISTRAR ALUMNO
     //=========================================
 
@@ -168,7 +167,7 @@ public class AlumnoService {
 
         Alumno alumno =
 
-                Alumno.builder()
+        Alumno.builder()
 
                         .nombreCompleto(
                                 dto.getNombreCompleto()
@@ -180,6 +179,10 @@ public class AlumnoService {
 
                         .semestre(
                                 dto.getSemestre()
+                        )
+
+                        .nss(
+                                dto.getNss()
                         )
 
                         .activo(true)
@@ -229,7 +232,8 @@ public class AlumnoService {
         );
 
     }
-        //=========================================
+
+    //=========================================
     // RESTABLECER PASSWORD
     //=========================================
 
@@ -274,37 +278,142 @@ public class AlumnoService {
     //=========================================
     // ACTUALIZAR ALUMNO
     //=========================================
+
     @Transactional
-public Alumno actualizarAlumno(
+    public Alumno actualizarAlumno(
 
-        Long id,
+            Long id,
 
-        AlumnoActualizarDTO dto
+            AlumnoActualizarDTO dto
 
-) {
+    ) {
 
-    Alumno alumno =
+        Alumno alumno =
 
-            alumnoRepository.findById(id)
+                alumnoRepository.findById(id)
 
-                    .orElseThrow(() ->
+                        .orElseThrow(() ->
 
-                            new RuntimeException(
-                                    "Alumno no encontrado"
-                            )
+                                new RuntimeException(
+                                        "Alumno no encontrado"
+                                )
 
-                    );
+                        );
+
+        //=========================================
+        // VALIDAR Y ACTUALIZAR MATRÍCULA
+        //=========================================
+
+        if (!alumno.getMatricula().equals(
+                dto.getMatricula()
+        )) {
+
+            // Verificar que la nueva matrícula
+            // no pertenezca a otro alumno
+
+            if (alumnoRepository.existsByMatricula(
+                    dto.getMatricula()
+            )) {
+
+                throw new RuntimeException(
+                        "La matrícula ya existe"
+                );
+
+            }
+
+            // Verificar también que no exista
+            // como username de otro usuario
+
+            if (usuarioRepository.existsByUsername(
+                    dto.getMatricula()
+            )) {
+
+                throw new RuntimeException(
+                        "La matrícula ya está asociada a otro usuario"
+                );
+
+            }
+
+            // Actualizar matrícula del alumno
+
+            alumno.setMatricula(
+                    dto.getMatricula()
+            );
+
+            // Actualizar username del usuario asociado
+
+            if (alumno.getUsuario() != null) {
+
+                alumno.getUsuario().setUsername(
+                        dto.getMatricula()
+                );
+
+                usuarioRepository.save(
+                        alumno.getUsuario()
+                );
+
+            }
+
+        }
+
+        //=========================================
+        // ACTUALIZAR CARRERA
+        //=========================================
+
+        Carrera carrera =
+
+                carreraRepository.findById(
+                        dto.getCarreraId()
+                )
+
+                        .orElseThrow(() ->
+
+                                new RuntimeException(
+                                        "Carrera no encontrada"
+                                )
+
+                        );
+
+        //=========================================
+        // ACTUALIZAR DATOS
+        //=========================================
+
+        alumno.setNombreCompleto(
+                dto.getNombreCompleto()
+        );
+
+        alumno.setSemestre(
+                dto.getSemestre()
+        );
+
+        alumno.setNss(
+                dto.getNss()
+        );
+
+        alumno.setCarrera(
+                carrera
+        );
+
+        return alumnoRepository.save(
+                alumno
+        );
+
+    }
 
     //=========================================
-    // VALIDAR Y ACTUALIZAR MATRÍCULA
+    // REGISTRO COMPLETO
     //=========================================
 
-    if (!alumno.getMatricula().equals(dto.getMatricula())) {
+    @Transactional
+    public RegistrarAlumnoResponse registrarCompleto(
+            RegistrarAlumnoRequest dto
+    ) throws Exception {
 
-        // Verificar que la nueva matrícula
-        // no pertenezca a otro alumno
+        //=====================================
+        // VALIDAR MATRÍCULA
+        //=====================================
 
-        if (alumnoRepository.existsByMatricula(
+        if (usuarioRepository.existsByUsername(
                 dto.getMatricula()
         )) {
 
@@ -314,77 +423,261 @@ public Alumno actualizarAlumno(
 
         }
 
-        // Verificar también que no exista
-        // como username de otro usuario
+        //=====================================
+        // CARRERA
+        //=====================================
 
-        if (usuarioRepository.existsByUsername(
-                dto.getMatricula()
-        )) {
+        Carrera carrera =
 
-            throw new RuntimeException(
-                    "La matrícula ya está asociada a otro usuario"
+                carreraRepository.findById(
+                        dto.getCarreraId()
+                )
+
+                        .orElseThrow(() ->
+
+                                new RuntimeException(
+                                        "Carrera no encontrada"
+                                )
+
+                        );
+
+        //=====================================
+        // ROL
+        //=====================================
+
+        Rol rol =
+
+                rolRepository.findByNombre(
+                        "ALUMNO"
+                )
+
+                        .orElseThrow(() ->
+
+                                new RuntimeException(
+                                        "Rol ALUMNO no encontrado"
+                                )
+
+                        );
+
+        //=====================================
+        // PASSWORD
+        //=====================================
+
+        String passwordTemporal =
+
+                passwordGenerator.generar();
+
+        //=====================================
+        // USUARIO
+        //=====================================
+
+        Usuario usuario =
+
+                Usuario.builder()
+
+                        .username(
+                                dto.getMatricula()
+                        )
+
+                        .password(
+
+                                passwordEncoder.encode(
+                                        passwordTemporal
+                                )
+
+                        )
+
+                        .rol(rol)
+
+                        .activo(true)
+
+                        .build();
+
+        usuario =
+
+                usuarioRepository.save(
+                        usuario
+                );
+
+        //=====================================
+        // ALUMNO
+        //=====================================
+
+        Alumno alumno =
+
+                Alumno.builder()
+
+                        .nombreCompleto(
+                                dto.getNombreCompleto()
+                        )
+
+                        .matricula(
+                                dto.getMatricula()
+                        )
+
+                        .semestre(
+                                dto.getSemestre()
+                        )
+
+                        .nss(
+                                dto.getNss()
+                        )
+
+                        .activo(true)
+
+                        .usuario(usuario)
+
+                        .carrera(carrera)
+
+                        .build();
+
+        alumno =
+
+                alumnoRepository.save(
+                        alumno
+                );
+
+        //=====================================
+        // FOTOGRAFÍA
+        //=====================================
+
+        if (dto.getFoto() != null &&
+                !dto.getFoto().isEmpty()) {
+
+            fotografiaService.subirFoto(
+
+                    alumno.getId(),
+
+                    dto.getFoto()
+
+            );
+
+            alumno = obtenerPorId(
+                    alumno.getId()
             );
 
         }
 
-        // Actualizar matrícula del alumno
+        //=====================================
+        // CREDENCIAL
+        //=====================================
 
-        alumno.setMatricula(
-                dto.getMatricula()
-        );
+        Credencial credencial =
 
-        // Actualizar username del usuario asociado
+                credencialService.generarCredencial(
+                        alumno
+                );
+
+        //=====================================
+        // RESPUESTA
+        //=====================================
+
+        return RegistrarAlumnoResponse.builder()
+
+                .id(
+                        alumno.getId()
+                )
+
+                .usuario(
+                        usuario.getUsername()
+                )
+
+                .passwordTemporal(
+                        passwordTemporal
+                )
+
+                .folio(
+                        credencial.getFolio()
+                )
+
+                .mensaje(
+                        "Alumno registrado correctamente"
+                )
+
+                .build();
+
+    }
+
+    //=========================================
+    // ELIMINAR ALUMNO COMPLETO
+    //=========================================
+
+    @Transactional
+    public void eliminarCompleto(
+            Long alumnoId
+    ) throws Exception {
+
+        Alumno alumno =
+
+                obtenerPorId(alumnoId);
+
+        //=========================
+        // ELIMINAR CREDENCIAL
+        //=========================
+
+        if (alumno.getId() != null) {
+
+            credencialService
+
+                    .obtenerTodas()
+
+                    .stream()
+
+                    .filter(c ->
+
+                            c.getAlumno()
+                                    .getId()
+                                    .equals(alumnoId)
+
+                    )
+
+                    .findFirst()
+
+                    .ifPresent(c -> {
+
+                        credencialService
+                                .eliminarCredencial(
+                                        c.getId()
+                                );
+
+                    });
+
+        }
+
+        //=========================
+        // ELIMINAR FOTO
+        //=========================
+
+        if (alumno.getFotografia() != null) {
+
+            fotografiaService.eliminarFoto(
+
+                    alumno.getFotografia().getId()
+
+            );
+
+        }
+
+        //=========================
+        // ELIMINAR USUARIO
+        //=========================
 
         if (alumno.getUsuario() != null) {
 
-            alumno.getUsuario().setUsername(
-                    dto.getMatricula()
-            );
-
-            usuarioRepository.save(
+            usuarioRepository.delete(
                     alumno.getUsuario()
             );
 
         }
 
+        //=========================
+        // ELIMINAR ALUMNO
+        //=========================
+
+        alumnoRepository.delete(
+                alumno
+        );
+
     }
 
-    //=========================================
-    // ACTUALIZAR CARRERA
-    //=========================================
-
-    Carrera carrera =
-
-            carreraRepository.findById(
-                    dto.getCarreraId()
-            )
-
-                    .orElseThrow(() ->
-
-                            new RuntimeException(
-                                    "Carrera no encontrada"
-                            )
-
-                    );
-
-    //=========================================
-    // ACTUALIZAR DATOS
-    //=========================================
-
-    alumno.setNombreCompleto(
-            dto.getNombreCompleto()
-    );
-
-    alumno.setSemestre(
-            dto.getSemestre()
-    );
-
-    alumno.setCarrera(
-            carrera
-    );
-
-    return alumnoRepository.save(
-            alumno
-    );
-}
 }
