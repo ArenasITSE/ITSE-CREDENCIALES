@@ -449,6 +449,19 @@ MODAL EDITAR
 
                         <div class="form-group">
 
+                            <label>NSS</label>
+
+                            <input
+                                type="text"
+                                [(ngModel)]="alumnoEditar.nss"
+                                maxlength="11"
+                                placeholder="Ingrese el NSS"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
                             <label>Semestre</label>
 
                             <input type="number" [(ngModel)]="alumnoEditar.semestre">

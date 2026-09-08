@@ -194,6 +194,34 @@ export class NuevoAlumno implements OnInit {
 
     }
 
+    //=========================================
+    // VALIDAR NSS
+    //=========================================
+
+    if (!this.alumno.nss) {
+
+      Swal.fire(
+        'NSS',
+        'Ingrese el NSS del alumno.',
+        'warning'
+      );
+
+      return;
+
+    }
+
+    if (!/^\d{11}$/.test(this.alumno.nss)) {
+
+      Swal.fire(
+        'NSS',
+        'El NSS debe contener exactamente 11 dígitos.',
+        'warning'
+      );
+
+      return;
+
+    }
+
     if (!this.alumno.carreraId) {
 
       Swal.fire(
