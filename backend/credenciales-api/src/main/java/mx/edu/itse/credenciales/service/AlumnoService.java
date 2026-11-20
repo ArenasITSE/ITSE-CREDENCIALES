@@ -67,6 +67,17 @@ public class AlumnoService {
 
     }
 
+        //=========================================
+        // ACTUALIZAR SEMESTRES GLOBALMENTE
+        //=========================================
+
+        @Transactional
+        public int actualizarSemestresGlobalmente() {
+
+        return alumnoRepository.avanzarSemestresActivos();
+
+        }
+
     //=========================================
     // OBTENER POR ID
     //=========================================

@@ -4,6 +4,8 @@ import mx.edu.itse.credenciales.dto.CarreraDashboardDTO;
 import mx.edu.itse.credenciales.dto.SemestreDashboardDTO;
 import mx.edu.itse.credenciales.entity.Alumno;
 
+import org.springframework.data.jpa.repository.Modifying;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -40,6 +42,22 @@ public interface AlumnoRepository
     //========================================
 
     long countByActivoTrue();
+
+         //========================================
+        // ACTUALIZACIÓN GLOBAL DE SEMESTRES
+        //========================================
+
+        @Modifying(
+                clearAutomatically = true,
+                flushAutomatically = true
+        )
+        @Query("""
+        UPDATE Alumno a
+        SET a.semestre = a.semestre + 1
+        WHERE a.activo = true
+        AND a.semestre < 9
+        """)
+        int avanzarSemestresActivos();
 
     @Query("""
     SELECT new mx.edu.itse.credenciales.dto.CarreraDashboardDTO(

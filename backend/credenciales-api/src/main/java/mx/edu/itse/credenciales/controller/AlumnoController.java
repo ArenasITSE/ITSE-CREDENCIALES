@@ -116,6 +116,21 @@ public Alumno actualizar(
 
 }
 
+//=========================================
+// ACTUALIZACIÓN GLOBAL DE SEMESTRES
+//=========================================
+
+@PutMapping("/actualizar-semestres")
+public String actualizarSemestresGlobalmente() {
+
+    int alumnosActualizados =
+            alumnoService.actualizarSemestresGlobalmente();
+
+    return "Actualización completada. Alumnos actualizados: "
+            + alumnosActualizados;
+
+}
+
 @DeleteMapping("/{id}/credencial")
 public String eliminarCredencial(
         @PathVariable Long id
