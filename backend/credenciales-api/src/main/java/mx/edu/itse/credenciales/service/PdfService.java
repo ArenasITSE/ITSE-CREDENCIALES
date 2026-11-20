@@ -14,6 +14,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import mx.edu.itse.credenciales.entity.Credencial;
 import mx.edu.itse.credenciales.repository.CredencialRepository;
+
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import com.itextpdf.text.Element;
 import mx.edu.itse.credenciales.service.HistorialCredencialService;
@@ -29,6 +31,7 @@ public class PdfService {
 
     private final CredencialRepository credencialRepository;
     private final HistorialCredencialService historialService;
+
     public String generarPdf(Long credencialId) throws Exception {
 
         Credencial credencial =
@@ -50,8 +53,8 @@ public class PdfService {
         Document document =
                 new Document(
                         new Rectangle(
-                                250,
-                                420
+                                420,
+                                280
                         ),
                         0,
                         0,
@@ -78,12 +81,18 @@ public class PdfService {
 
         Image fondo =
                 Image.getInstance(
-                        "src/main/resources/plantillas/credencial_frente5.png"
+
+                        new ClassPathResource(
+                                "plantillas/credencial_frente1.png"
+                        )
+                                .getInputStream()
+                                .readAllBytes()
+
                 );
 
         fondo.scaleAbsolute(
-                250,
-                420
+                420,
+                280
         );
 
         fondo.setAbsolutePosition(
@@ -116,13 +125,13 @@ public class PdfService {
                             );
 
                     foto.scaleAbsolute(
-                            65,
-                            96
+                            90,
+                            118
                     );
 
                     foto.setAbsolutePosition(
-                            20,
-                            186
+                            22,
+                            88
                     );
 
                     document.add(
@@ -167,15 +176,15 @@ public class PdfService {
         Font datosFont =
                 new Font(
                         helvetica,
-                        8,
-                        Font.BOLD,
+                        9,
+                        Font.NORMAL,
                         BaseColor.BLACK
                 );
 
         Font estadoFont =
                 new Font(
                         helvetica,
-                        8,
+                        9,
                         Font.BOLD,
                         new BaseColor(
                                 120,
@@ -192,56 +201,53 @@ public class PdfService {
                         BaseColor.DARK_GRAY
                 );
 
-                
-
         // ===========================
         // NOMBRE DEL ALUMNO
         // ===========================
-escribirTexto(
 
-        canvas,
+        escribirTexto(
 
-        helvetica,
+                canvas,
 
-        credencial.getAlumno()
-                .getNombreCompleto(),
+                helvetica,
 
-        127,
+                credencial.getAlumno()
+                        .getNombreCompleto(),
 
-        257,
+                172,
+                188,
+                165,
 
-        110,
+                Font.NORMAL,
 
-        Font.NORMAL,
+                new BaseColor(
+                        35,
+                        35,
+                        35
+                )
 
-        new BaseColor(
-                35,
-                35,
-                35
-        )
+        );
 
-);
-                // ===========================
+        // ===========================
         // CARRERA
         // ===========================
-escribirCarrera(
 
-        canvas,
+        escribirCarrera(
 
-        helvetica,
+                canvas,
 
-        credencial.getAlumno()
-                .getCarrera()
-                .getNombre(),
+                helvetica,
 
-        127,
+                credencial.getAlumno()
+                        .getCarrera()
+                        .getNombre(),
 
-        230,
+                173,
+                175,
+                170
 
-        110
+        );
 
-);
-       
         // ===========================
         // MATRÍCULA
         // ===========================
@@ -261,10 +267,8 @@ escribirCarrera(
 
                 ),
 
-                127,
-
-                180,
-
+                183,
+                140,
                 0
 
         );
@@ -272,30 +276,25 @@ escribirCarrera(
         // ===========================
         // SEMESTRE
         // ===========================
-// ===========================
-// SEMESTRE
-// ===========================
 
-ColumnText.showTextAligned(
+        ColumnText.showTextAligned(
 
-        canvas,
+                canvas,
 
-        Element.ALIGN_LEFT,
+                Element.ALIGN_LEFT,
 
-        new Phrase(
-                String.valueOf(
-                        credencial.getAlumno().getSemestre()
-                )
-                
-        ),
+                new Phrase(
+                        String.valueOf(
+                                credencial.getAlumno().getSemestre()
+                        )
+                ),
 
-        127,
+                180,
+                116,
 
-        143,
+                0
 
-        0
-
-);
+        );
 
         // ===========================
         // FOLIO
@@ -315,10 +314,33 @@ ColumnText.showTextAligned(
 
                 ),
 
-                127,
+                170,
+                94,
+                0
 
-                107,
+        );
 
+        // ===========================
+        // NSS
+        // ===========================
+
+        ColumnText.showTextAligned(
+
+                canvas,
+
+                Element.ALIGN_LEFT,
+
+                new Phrase(
+
+                        credencial.getAlumno()
+                                .getNss(),
+
+                        datosFont
+
+                ),
+
+                170,
+                73,
                 0
 
         );
@@ -341,10 +363,8 @@ ColumnText.showTextAligned(
 
                 ),
 
-                127,
-
-                70,
-
+                255,
+                117,
                 0
 
         );
@@ -370,13 +390,13 @@ ColumnText.showTextAligned(
                             );
 
                     qr.scaleAbsolute(
-                            50,
-                            58
+                            60,
+                            60
                     );
 
                     qr.setAbsolutePosition(
-                            16,
-                            42
+                            326,
+                            75
                     );
 
                     document.add(
@@ -395,24 +415,23 @@ ColumnText.showTextAligned(
 
         }
 
-       
-                // ===========================
+        // ===========================
         // CERRAR DOCUMENTO
         // ===========================
 
-      document.close();
+        document.close();
 
-historialService.registrarEvento(
+        historialService.registrarEvento(
 
-        credencial,
+                credencial,
 
-        "PDF generado",
+                "PDF generado",
 
-        "ADMIN"
+                "ADMIN"
 
-);
+        );
 
-return rutaPdf;
+        return rutaPdf;
 
     }
 
@@ -432,7 +451,7 @@ return rutaPdf;
             BaseColor color
     ) {
 
-        float size = 12;
+        float size = 10;
 
         while (size >= 7) {
 
@@ -579,23 +598,24 @@ return rutaPdf;
 
     public String regenerarPdf(Long credencialId) throws Exception {
 
-    Credencial credencial =
-            credencialRepository.findById(credencialId)
-                    .orElseThrow(() ->
-                            new RuntimeException(
-                                    "Credencial no encontrada"));
+        Credencial credencial =
+                credencialRepository.findById(credencialId)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Credencial no encontrada"
+                                ));
 
-    String rutaPdf =
-            "uploads/credenciales/"
-                    + credencial.getFolio()
-                    + ".pdf";
+        String rutaPdf =
+                "uploads/credenciales/"
+                        + credencial.getFolio()
+                        + ".pdf";
 
-    Files.deleteIfExists(
-            Paths.get(rutaPdf)
-    );
+        Files.deleteIfExists(
+                Paths.get(rutaPdf)
+        );
 
-    return generarPdf(credencialId);
+        return generarPdf(credencialId);
 
-}
+    }
 
 }

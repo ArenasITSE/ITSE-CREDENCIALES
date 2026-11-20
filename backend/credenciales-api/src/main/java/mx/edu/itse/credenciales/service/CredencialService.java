@@ -1,6 +1,7 @@
 package mx.edu.itse.credenciales.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import mx.edu.itse.credenciales.dto.BusquedaCredencialDTO;
 import mx.edu.itse.credenciales.dto.VerificacionCredencialDTO;
 import mx.edu.itse.credenciales.entity.Alumno;
@@ -39,6 +40,9 @@ public class CredencialService {
     private final HistorialCredencialService historialService;
 
     private final FolioGenerator folioGenerator;
+
+    @Value("${app.base-url}")
+        private String baseUrl;
 
     //=========================================
     // OBTENER TODAS
@@ -109,9 +113,7 @@ public class CredencialService {
                 folioGenerator.generar();
 
         String urlVerificacion =
-
-                "http://localhost:8080/verificar/"
-                        + folio;
+        baseUrl.replaceAll("/$", "") + "/verificar/" + folio;
 
         String qrPath =
 

@@ -7,8 +7,12 @@ public class AlumnoActualizarDTO {
 
     private String nombreCompleto;
 
+    private String matricula;
+
     private Integer semestre;
 
     private Long carreraId;
+
+    private String nss;
 
 }

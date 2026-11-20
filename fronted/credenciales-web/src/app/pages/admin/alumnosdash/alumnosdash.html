@@ -443,7 +443,20 @@ MODAL EDITAR
 
                             <label>Matrícula</label>
 
-                            <input type="text" [(ngModel)]="alumnoEditar.matricula" disabled>
+                            <input type="text" [(ngModel)]="alumnoEditar.matricula">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>NSS</label>
+
+                            <input
+                                type="text"
+                                [(ngModel)]="alumnoEditar.nss"
+                                maxlength="11"
+                                placeholder="Ingrese el NSS"
+                            >
 
                         </div>
 
