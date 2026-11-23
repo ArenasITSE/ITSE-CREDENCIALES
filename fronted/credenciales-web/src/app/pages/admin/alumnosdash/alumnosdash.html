@@ -4,33 +4,48 @@
     <!-- HEADER -->
     <!-- ===================================== -->
 
+   
     <div class="page-header">
 
         <div>
 
             <h1>
-
                 Gestión de Alumnos
-
             </h1>
 
             <p>
-
                 Administra alumnos, credenciales institucionales y usuarios del sistema.
-
             </p>
 
         </div>
 
-        <button class="btn btn-primary" (click)="nuevoAlumno()">
+        <div class="header-actions">
 
-            <i class="fa-solid fa-user-plus"></i>
+            <button
+                class="btn btn-warning"
+                (click)="actualizarSemestresGlobalmente()"
+                [disabled]="actualizandoSemestres">
 
-            Nuevo Alumno
+                <i class="fa-solid fa-calendar-arrow-up"></i>
 
-        </button>
+                Actualizar semestres
+
+            </button>
+
+            <button
+                class="btn btn-primary"
+                (click)="nuevoAlumno()">
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                Nuevo Alumno
+
+            </button>
+
+        </div>
 
     </div>
+
 
     <!-- ===================================== -->
     <!-- FILTROS -->

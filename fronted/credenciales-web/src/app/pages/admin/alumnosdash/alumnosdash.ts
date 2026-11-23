@@ -35,6 +35,8 @@ export class Alumnosdash implements OnInit {
 
   procesando = false;
 
+  actualizandoSemestres = false;
+
   //==========================================
   // DATOS
   //==========================================
@@ -164,6 +166,210 @@ export class Alumnosdash implements OnInit {
       });
 
   }
+
+    //==========================================
+  // ACTUALIZAR SEMESTRES GLOBALMENTE
+  //==========================================
+
+  
+  actualizarSemestresGlobalmente(): void {
+
+    if (this.actualizandoSemestres) {
+      return;
+    }
+
+    let segundosRestantes = 5;
+
+    let intervalo: ReturnType<typeof setInterval> | undefined;
+
+    Swal.fire({
+
+      title: 'Confirmar actualización de semestres global',
+
+      html: `
+        <p>
+          Esta operación modificará el semestre de todos los alumnos
+          incluidos en el sistema, pasándolos al siguiente automáticamente.
+        </p>
+
+        <p>
+          <strong>No se puede revertir automáticamente.</strong>
+          Por favor, asegúrese de realizar la operación cada semestre,
+          una vez verificado el estado académico de cada alumno del ITSE.
+        </p>
+
+        <p style="color: #dc2626; font-weight: bold;">
+          Los alumnos que deban cursar 10.º semestre o uno superior
+          deberán actualizarse manualmente, ya que son casos excepcionales.
+        </p>
+      `,
+
+      icon: 'warning',
+
+      showCancelButton: true,
+
+      confirmButtonText: 'Confirmar actualización',
+
+      cancelButtonText: 'Cancelar',
+
+      confirmButtonColor: '#d97706',
+
+      cancelButtonColor: '#6b7280',
+
+      reverseButtons: true,
+
+      focusCancel: true,
+
+      confirmButtonAriaLabel: 'Confirmar actualización',
+
+      
+didOpen: () => {
+
+    const botonConfirmar = Swal.getConfirmButton();
+
+    const popup = Swal.getPopup();
+
+    if (!botonConfirmar || !popup) {
+        return;
+    }
+
+    botonConfirmar.disabled = true;
+
+    const contador = document.createElement('p');
+
+    contador.id = 'contador-confirmacion';
+
+    contador.style.cssText = `
+        color: #d97706;
+        font-weight: bold;
+        margin: 0 0 12px;
+        text-align: center;
+    `;
+
+    contador.textContent =
+        `Podrás confirmar en ${segundosRestantes} segundos`;
+
+    const acciones = popup.querySelector('.swal2-actions');
+
+    if (acciones) {
+        popup.insertBefore(contador, acciones);
+    }
+
+    intervalo = window.setInterval(() => {
+
+        segundosRestantes--;
+
+        if (segundosRestantes > 0) {
+
+            contador.textContent =
+                `Podrás confirmar en ${segundosRestantes} segundos`;
+
+        } else {
+
+            if (intervalo !== undefined) {
+                window.clearInterval(intervalo);
+            }
+
+            botonConfirmar.disabled = false;
+
+            contador.textContent =
+                'Ya puedes confirmar la actualización.';
+
+            botonConfirmar.focus();
+
+        }
+
+    }, 1000);
+
+        },
+
+        willClose: () => {
+
+            if (intervalo !== undefined) {
+                window.clearInterval(intervalo);
+            }
+
+        },
+
+
+    }).then(result => {
+
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      this.actualizandoSemestres = true;
+
+      Swal.fire({
+
+        title: 'Actualizando semestres',
+
+        text: 'Por favor, espere mientras se procesa la operación.',
+
+        allowOutsideClick: false,
+
+        allowEscapeKey: false,
+
+        didOpen: () => {
+          Swal.showLoading();
+        }
+
+      });
+
+      this.alumnoService
+        .actualizarSemestresGlobalmente()
+        .subscribe({
+
+          next: (respuesta: string) => {
+
+            this.actualizandoSemestres = false;
+
+            Swal.fire({
+
+              title: 'Actualización completada',
+
+              text: respuesta,
+
+              icon: 'success',
+
+              confirmButtonText: 'Aceptar'
+
+            });
+
+            this.cargarAlumnos();
+
+          },
+
+          error: (err) => {
+
+            console.error(err);
+
+            this.actualizandoSemestres = false;
+
+            Swal.fire({
+
+              title: 'Error',
+
+              text: 'No fue posible actualizar los semestres. Compruebe la conexión y los permisos de administrador.',
+
+              icon: 'error',
+
+              confirmButtonText: 'Aceptar'
+
+            });
+
+          }
+
+        });
+
+    }).catch(error => {
+
+        console.error('Error en la ventana de confirmación:', error);
+
+    });
+
+  }
+
 
   //==========================================
   // OBTENER SEMESTRES
@@ -603,7 +809,12 @@ export class Alumnosdash implements OnInit {
 
       });
 
+      }).catch(error => {
+
+      console.error('Error en la confirmación de eliminación:', error);
+
     });
+      
 
   }
 
@@ -677,7 +888,12 @@ export class Alumnosdash implements OnInit {
 
       });
 
+      }).catch(error => {
+
+      console.error('Error en la confirmación de eliminación de credencial:', error);
+
     });
+
 
   }
 

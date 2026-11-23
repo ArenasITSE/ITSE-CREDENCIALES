@@ -1470,3 +1470,40 @@ tbody td:nth-child(3){
 
   
 }
+
+
+/* ==========================================
+   ACCIONES DEL ENCABEZADO
+========================================== */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-warning {
+    background-color: #d97706;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-warning:hover:not(:disabled) {
+    background-color: #b45309;
+}
+
+.btn-warning:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .header-actions {
+        width: 100%;
+    }
+
+    .header-actions button {
+        flex: 1;
+    }
+}

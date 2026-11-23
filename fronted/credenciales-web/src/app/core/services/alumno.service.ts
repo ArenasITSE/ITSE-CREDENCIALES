@@ -116,6 +116,28 @@ export class AlumnoService {
     );
 
 }
+
+  //==========================================
+  // ACTUALIZAR SEMESTRES GLOBALMENTE
+  //==========================================
+
+  actualizarSemestresGlobalmente(): Observable<string> {
+
+    return this.http.put(
+
+      `${environment.apiUrl}/alumnos/actualizar-semestres`,
+
+      {},
+
+      {
+
+        responseType: 'text'
+
+      }
+
+    );
+
+  }
   //==========================================
   // RESTABLECER PASSWORD
   //==========================================
