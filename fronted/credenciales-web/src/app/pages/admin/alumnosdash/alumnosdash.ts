@@ -194,8 +194,9 @@ export class Alumnosdash implements OnInit {
 
         <p>
           <strong>No se puede revertir automáticamente.</strong>
-          Por favor, asegúrese de realizar la operación cada semestre,
-          una vez verificado el estado académico de cada alumno del ITSE.
+          Por favor, asegúrese de realizar la operación
+          una vez verificado el estado académico de cada alumno registrado
+          al inicio de cada semestre.
         </p>
 
         <p style="color: #dc2626; font-weight: bold;">
